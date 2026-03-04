@@ -1548,11 +1548,41 @@ const UserManager = {
         } else {
             userMenu.innerHTML = '<a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>';
         }
+    },
+    
+    // 确保管理员账户存在
+    ensureAdminAccount() {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // 检查是否已有管理员账户
+        const existingAdmin = users.find(user => user.role === 'admin');
+        if (existingAdmin) {
+            return;
+        }
+        
+        // 创建管理员账户
+        const adminUser = {
+            id: Date.now(),
+            username: 'admin',
+            email: 'admin@example.com',
+            password: 'admin123',
+            role: 'admin',
+            createdAt: new Date().toISOString()
+        };
+        
+        // 添加到用户列表
+        users.push(adminUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        console.log('管理员账户已创建：', adminUser.username);
     }
 };
 
 // 页面初始化
 async function initPage() {
+    // 确保管理员账户存在
+    UserManager.ensureAdminAccount();
+    
     // 移动端菜单切换
     const navToggle = DOMUtil.$('.nav-toggle');
     const navMenu = DOMUtil.$('.nav-menu');
