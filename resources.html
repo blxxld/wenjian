@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源库 - 问茧</title>
+    <meta name="description" content="问茧资源库，汇集大学生所需的学习资源、实习信息、竞赛资讯和实用工具">
+    <meta name="keywords" content="资源库,学习资源,实习就业,竞赛资讯,实用工具">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html" class="active"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="page-header">
+            <h1 class="page-title">资源库</h1>
+            <p class="page-subtitle">发现适合你的优质资源</p>
+            
+            <div class="search-box animate-on-scroll">
+                <input type="text" id="search-input" placeholder="搜索资源...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="resources-container">
+                <!-- 侧边栏筛选 -->
+                <div class="resources-sidebar">
+                    <!-- 分类筛选卡片 -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-filter"></i> 按分类筛选</h3>
+                        <ul class="filter-list">
+                            <li><a href="#" class="filter-item active" data-category="all">全部资源</a></li>
+                            <li><a href="#" class="filter-item" data-category="learning">
+                                <i class="fas fa-graduation-cap"></i> 学习资源
+                                <span class="item-count" id="count-learning">0</span>
+                            </a></li>
+                            <li><a href="#" class="filter-item" data-category="internship">
+                                <i class="fas fa-briefcase"></i> 实习就业
+                                <span class="item-count" id="count-internship">0</span>
+                            </a></li>
+                            <li><a href="#" class="filter-item" data-category="competition">
+                                <i class="fas fa-trophy"></i> 竞赛资讯
+                                <span class="item-count" id="count-competition">0</span>
+                            </a></li>
+                            <li><a href="#" class="filter-item" data-category="tools">
+                                <i class="fas fa-tools"></i> 实用工具
+                                <span class="item-count" id="count-tools">0</span>
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 年级筛选卡片 -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-user-graduate"></i> 适用年级</h3>
+                        <ul class="filter-list">
+                            <li><a href="#" class="filter-item active" data-grade="all">全部年级</a></li>
+                            <li><a href="#" class="filter-item" data-grade="freshman">大一</a></li>
+                            <li><a href="#" class="filter-item" data-grade="sophomore">大二</a></li>
+                            <li><a href="#" class="filter-item" data-grade="junior">大三</a></li>
+                            <li><a href="#" class="filter-item" data-grade="senior">大四</a></li>
+                            <li><a href="#" class="filter-item" data-grade="graduate">研究生</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 其他筛选卡片 -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-sliders-h"></i> 其他筛选</h3>
+                        <div class="other-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="free-only" class="filter-checkbox">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">仅显示免费资源</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="high-rating" class="filter-checkbox">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">高评分（4星以上）</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 重置按钮 -->
+                    <button id="reset-filters" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-redo"></i> 重置所有筛选
+                    </button>
+                    
+                    <!-- 统计信息 -->
+                    <div class="sidebar-card stats-card">
+                        <h3><i class="fas fa-chart-bar"></i> 资源统计</h3>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-count">0</span>
+                                <span class="stat-label">总资源数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="free-count">0</span>
+                                <span class="stat-label">免费资源</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="premium-count">0</span>
+                                <span class="stat-label">优质推荐</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主内容区 -->
+                <div class="resources-main">
+                    <!-- 排序和结果统计 -->
+                    <div class="resources-sort">
+                        <span class="sort-title">排序方式：</span>
+                        <select id="sort-select">
+                            <option value="date">最新添加</option>
+                            <option value="rating">最高评分</option>
+                            <option value="name">名称 A-Z</option>
+                        </select>
+                        <div class="results-info">
+                            <span class="result-count">找到 <strong id="filtered-count">0</strong> 个资源</span>
+                            <span class="current-filter" id="current-filter-text">全部资源</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 资源网格 -->
+                    <div class="resources-grid" id="all-resources">
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            <p>正在加载资源列表...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 分页 -->
+                    <div class="pagination-container" id="pagination-container">
+                        <!-- 分页会通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="resources.html">资源库</a></li>
+                    <li><a href="about.html">关于我们</a></li>
+                    <li><a href="submit.html">提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

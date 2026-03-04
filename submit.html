@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提交资源 - 问茧</title>
+    <meta name="description" content="向问茧提交优质资源，共同建设大学生资源库">
+    <meta name="keywords" content="提交资源,资源贡献,大学生资源,共建平台">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+            backdrop-filter: blur(10px);
+            background: linear-gradient(10deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 100%);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .form-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: flex-end;
+            margin-top: 3rem;
+        }
+        
+        .success-message {
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .error-message {
+            color: var(--warning-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .form-input.error,
+        .form-textarea.error,
+        .form-select.error {
+            border-color: var(--warning-color);
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html" class="active"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">提交资源</h1>
+            <p class="page-subtitle">分享你发现的优质学习资源、实习机会或实用工具，帮助更多同学</p>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <section class="section">
+            <div class="form-container animate-on-scroll">
+                <!-- 成功消息 -->
+                <div class="success-message" id="successMessage">
+                    <h3><i class="fas fa-check-circle"></i> 提交成功！</h3>
+                    <p>感谢你的贡献，我们会尽快审核你提交的资源。</p>
+                </div>
+
+                <!-- 提交表单 -->
+                <form id="submitForm" onsubmit="return handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="resourceTitle" class="form-label">资源标题 *</label>
+                        <input type="text" id="resourceTitle" class="form-input" placeholder="请输入资源标题" required>
+                        <div class="error-message" id="resourceTitleError">请输入资源标题</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceUrl" class="form-label">资源链接 *</label>
+                        <input type="url" id="resourceUrl" class="form-input" placeholder="请输入资源链接（http:// 或 https://）" required>
+                        <div class="error-message" id="resourceUrlError">请输入有效的资源链接</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceCategory" class="form-label">资源分类 *</label>
+                        <select id="resourceCategory" class="form-select" required>
+                            <option value="">请选择分类</option>
+                            <option value="learning">学习资源</option>
+                            <option value="internship">实习就业</option>
+                            <option value="competition">竞赛资讯</option>
+                            <option value="tools">实用工具</option>
+                        </select>
+                        <div class="error-message" id="resourceCategoryError">请选择资源分类</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceDescription" class="form-label">资源描述 *</label>
+                        <textarea id="resourceDescription" class="form-textarea" placeholder="请详细描述资源的内容和价值" required></textarea>
+                        <div class="error-message" id="resourceDescriptionError">请输入资源描述</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceGrade" class="form-label">适用年级</label>
+                        <select id="resourceGrade" class="form-select">
+                            <option value="all">全部年级</option>
+                            <option value="freshman">大一</option>
+                            <option value="sophomore">大二</option>
+                            <option value="junior">大三</option>
+                            <option value="senior">大四</option>
+                            <option value="graduate">研究生</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceTags" class="form-label">标签（用逗号分隔）</label>
+                        <input type="text" id="resourceTags" class="form-input" placeholder="例如：学习,免费,编程">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">是否免费</label>
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="resourceFree" checked>
+                            <label for="resourceFree">是，免费资源</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userName" class="form-label">你的姓名（选填）</label>
+                        <input type="text" id="userName" class="form-input" placeholder="请输入你的姓名">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userEmail" class="form-label">你的邮箱（选填）</label>
+                        <input type="email" id="userEmail" class="form-input" placeholder="请输入你的邮箱，以便我们联系你">
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="index.html" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> 返回首页
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-share-alt"></i> 提交资源
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=learning"><i class="fas fa-graduation-cap"></i> 学习资源</a></li>
+                    <li><a href="resources.html?category=internship"><i class="fas fa-briefcase"></i> 实习就业</a></li>
+                    <li><a href="resources.html?category=competition"><i class="fas fa-trophy"></i> 竞赛资讯</a></li>
+                    <li><a href="resources.html?category=tools"><i class="fas fa-tools"></i> 实用工具</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        // 表单验证和提交处理
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // 重置错误消息
+            resetErrors();
+            
+            // 验证表单
+            if (!validateForm()) {
+                return false;
+            }
+            
+            // 获取表单数据
+            const formData = {
+                title: document.getElementById('resourceTitle').value,
+                url: document.getElementById('resourceUrl').value,
+                category: document.getElementById('resourceCategory').value,
+                description: document.getElementById('resourceDescription').value,
+                grade: document.getElementById('resourceGrade').value,
+                tags: document.getElementById('resourceTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                free: document.getElementById('resourceFree').checked,
+                userName: document.getElementById('userName').value,
+                userEmail: document.getElementById('userEmail').value
+            };
+            
+            // 模拟提交（实际项目中可以发送到后端）
+            console.log('提交的资源数据:', formData);
+            
+            // 检查用户是否登录，给予积分奖励
+            const currentUser = UserManager.getCurrentUser();
+            if (currentUser) {
+                // 给用户添加积分
+                const updatedUser = PointsManager.addPoints(currentUser.username, PointsManager.pointConfig.submitResource, 'submitResource');
+                console.log('用户积分已更新:', updatedUser);
+                
+                // 更新成功消息，包含积分奖励信息
+                const successMessage = document.getElementById('successMessage');
+                successMessage.innerHTML = `
+                    <h3><i class="fas fa-check-circle"></i> 提交成功！</h3>
+                    <p>感谢你的贡献，我们会尽快审核你提交的资源。</p>
+                    <p class="points-earned">你获得了 <strong>${PointsManager.pointConfig.submitResource}</strong> 积分奖励！</p>
+                `;
+            } else {
+                // 未登录用户的成功消息
+                document.getElementById('successMessage').innerHTML = `
+                    <h3><i class="fas fa-check-circle"></i> 提交成功！</h3>
+                    <p>感谢你的贡献，我们会尽快审核你提交的资源。</p>
+                    <p class="login-prompt">登录后提交资源可获得积分奖励哦！</p>
+                `;
+            }
+            
+            // 显示成功消息
+            document.getElementById('successMessage').classList.add('show');
+            
+            // 重置表单
+            document.getElementById('submitForm').reset();
+            
+            // 3秒后隐藏成功消息
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+            }, 3000);
+            
+            return false;
+        }
+        
+        // 表单验证
+        function validateForm() {
+            let isValid = true;
+            
+            // 验证标题
+            const title = document.getElementById('resourceTitle');
+            if (!title.value.trim()) {
+                showError(title, 'resourceTitleError', '请输入资源标题');
+                isValid = false;
+            }
+            
+            // 验证链接
+            const url = document.getElementById('resourceUrl');
+            if (!url.value.trim()) {
+                showError(url, 'resourceUrlError', '请输入资源链接');
+                isValid = false;
+            } else if (!isValidUrl(url.value)) {
+                showError(url, 'resourceUrlError', '请输入有效的资源链接');
+                isValid = false;
+            }
+            
+            // 验证分类
+            const category = document.getElementById('resourceCategory');
+            if (!category.value) {
+                showError(category, 'resourceCategoryError', '请选择资源分类');
+                isValid = false;
+            }
+            
+            // 验证描述
+            const description = document.getElementById('resourceDescription');
+            if (!description.value.trim()) {
+                showError(description, 'resourceDescriptionError', '请输入资源描述');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // 显示错误消息
+        function showError(element, errorId, message) {
+            element.classList.add('error');
+            const errorElement = document.getElementById(errorId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+        
+        // 重置错误消息
+        function resetErrors() {
+            const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+            inputs.forEach(input => {
+                input.classList.remove('error');
+            });
+            
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(message => {
+                message.classList.remove('show');
+            });
+        }
+        
+        // 验证URL
+        function isValidUrl(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+        
+        // 初始化动画
+        document.addEventListener('DOMContentLoaded', function() {
+            initAllAnimations();
+        });
+    </script>
+</body>
+</html>

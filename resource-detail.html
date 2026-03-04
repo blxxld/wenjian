@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源详情 - 问茧</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .resource-detail {
+            padding: 4rem 0;
+        }
+        
+        .resource-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .resource-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0L100,0L100,100L0,100Z"/></svg>');
+            background-size: cover;
+            opacity: 0.1;
+        }
+        
+        .resource-header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .resource-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .resource-badge.free {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .resource-badge.paid {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .resource-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .resource-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .resource-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+        
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .resource-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .resource-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 3rem;
+        }
+        
+        .content-section {
+            margin-bottom: 3rem;
+        }
+        
+        .content-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+        
+        .resource-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .info-card {
+            background: #f8fafc;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+        
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card h3 i {
+            color: var(--primary-color);
+        }
+        
+        .info-card p {
+            color: var(--gray-color);
+            line-height: 1.6;
+        }
+        
+        .related-resources {
+            margin-top: 4rem;
+        }
+        
+        .related-resources h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--dark-color);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--gray-color);
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(67, 97, 238, 0.1);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 4rem;
+            color: var(--gray-color);
+        }
+        
+        .error-message h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .resource-header {
+                padding: 3rem 0;
+            }
+            
+            .resource-title {
+                font-size: 2rem;
+            }
+            
+            .resource-meta {
+                gap: 1rem;
+            }
+            
+            .resource-content {
+                padding: 2rem;
+            }
+            
+            .resource-actions {
+                flex-direction: column;
+            }
+            
+            .resource-actions .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .resource-header {
+                padding: 2rem 0;
+            }
+            
+            .resource-title {
+                font-size: 1.8rem;
+            }
+            
+            .resource-content {
+                padding: 1.5rem;
+            }
+            
+            .meta-item {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 资源详情头部 -->
+    <header class="resource-header">
+        <div class="container">
+            <div class="resource-header-content">
+                <span class="resource-badge" id="resource-badge">免费</span>
+                <h1 class="resource-title" id="resource-title">资源标题</h1>
+                <div class="resource-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span id="resource-category">学习资源</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span id="resource-grade">全部年级</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-star"></i>
+                        <span id="resource-rating">5.0</span>
+                    </div>
+                </div>
+                <p class="resource-description" id="resource-description">资源描述</p>
+                <div class="resource-tags" id="resource-tags">
+                    <!-- 标签会通过JavaScript动态添加 -->
+                </div>
+                <div class="resource-actions">
+                    <a href="#" id="resource-url" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt"></i> 访问网站
+                    </a>
+                    <button id="favorite-btn" class="btn btn-secondary">
+                        <i class="far fa-heart"></i> 收藏资源
+                    </button>
+                    <a href="resources.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> 返回资源库
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <section class="resource-detail">
+            <!-- 资源详情内容 -->
+            <div class="resource-content" id="resource-content">
+                <div class="content-section">
+                    <h2><i class="fas fa-info-circle"></i> 资源详情</h2>
+                    <div class="resource-info-grid">
+                        <div class="info-card">
+                            <h3><i class="fas fa-link"></i> 访问链接</h3>
+                            <p id="info-url">https://example.com</p>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-calendar"></i> 添加时间</h3>
+                            <p id="info-date">2024-01-01</p>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-dollar-sign"></i> 费用</h3>
+                            <p id="info-price">免费</p>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-star"></i> 评分</h3>
+                            <p id="info-rating">5.0 (满分5.0)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h2><i class="fas fa-lightbulb"></i> 使用建议</h2>
+                    <p id="usage-tips">
+                        这是一个优质的学习资源，建议根据自身需求合理使用。
+                        可以结合其他相关资源一起学习，效果会更好。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 相关资源 -->
+            <section class="related-resources">
+                <h2>相关资源推荐</h2>
+                <div class="resources-grid" id="related-resources">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>正在加载相关资源...</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=learning"><i class="fas fa-graduation-cap"></i> 学习资源</a></li>
+                    <li><a href="resources.html?category=internship"><i class="fas fa-briefcase"></i> 实习就业</a></li>
+                    <li><a href="resources.html?category=competition"><i class="fas fa-trophy"></i> 竞赛资讯</a></li>
+                    <li><a href="resources.html?category=tools"><i class="fas fa-tools"></i> 实用工具</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        // 资源详情页脚本
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 从URL获取资源ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const resourceId = urlParams.get('id');
+            
+            if (!resourceId) {
+                showError('资源ID不存在');
+                return;
+            }
+            
+            // 加载资源数据
+            await ResourceManager.loadResources();
+            
+            // 查找资源
+            const resource = ResourceManager.getResources().find(r => r.id.toString() === resourceId);
+            
+            if (!resource) {
+                showError('资源不存在');
+                return;
+            }
+            
+            // 显示资源详情
+            displayResourceDetail(resource);
+            
+            // 加载相关资源
+            loadRelatedResources(resource);
+            
+            // 绑定收藏按钮
+            const favoriteBtn = document.getElementById('favorite-btn');
+            if (favoriteBtn) {
+                const isFavorited = FavoriteManager.isResourceFavorited(resourceId);
+                updateFavoriteButton(favoriteBtn, isFavorited);
+                
+                favoriteBtn.addEventListener('click', function() {
+                    FavoriteManager.toggleFavorite(resourceId);
+                    const newStatus = FavoriteManager.isResourceFavorited(resourceId);
+                    updateFavoriteButton(favoriteBtn, newStatus);
+                });
+            }
+        });
+        
+        // 为分类添加图标
+        function getCategoryIcon(category) {
+            const icons = {
+                'learning': 'fas fa-graduation-cap',
+                'internship': 'fas fa-briefcase',
+                'competition': 'fas fa-trophy',
+                'tools': 'fas fa-tools'
+            };
+            return icons[category] || 'fas fa-book';
+        }
+        
+        // 显示资源详情
+        function displayResourceDetail(resource) {
+            // 更新资源信息
+            document.getElementById('resource-title').textContent = resource.title;
+            document.getElementById('resource-description').textContent = resource.description;
+            
+            // 更新分类信息（带图标）
+            const categoryElement = document.getElementById('resource-category');
+            const categoryIcon = getCategoryIcon(resource.category);
+            categoryElement.innerHTML = `<i class="${categoryIcon}"></i> ${Constants.categoryMap[resource.category] || resource.category}`;
+            
+            document.getElementById('resource-grade').textContent = Constants.gradeMap[resource.grade] || resource.grade;
+            document.getElementById('resource-rating').textContent = resource.rating.toFixed(1);
+            document.getElementById('resource-url').href = resource.url;
+            
+            // 更新资源标签
+            const tagsContainer = document.getElementById('resource-tags');
+            tagsContainer.innerHTML = '';
+            resource.tags.forEach(tag => {
+                const tagText = Array.isArray(tag) ? tag.join('') : tag;
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.textContent = tagText;
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            // 更新资源徽章
+            const badge = document.getElementById('resource-badge');
+            badge.className = `resource-badge ${resource.free ? 'free' : 'paid'}`;
+            badge.textContent = resource.free ? '免费' : '付费';
+            
+            // 更新信息卡片
+            document.getElementById('info-url').textContent = resource.url;
+            document.getElementById('info-date').textContent = resource.createdAt ? new Date(resource.createdAt).toLocaleDateString() : '未知';
+            document.getElementById('info-price').textContent = resource.free ? '免费' : '付费';
+            document.getElementById('info-rating').textContent = `${resource.rating.toFixed(1)} (满分5.0)`;
+            
+            // 更新使用建议
+            const usageTips = document.getElementById('usage-tips');
+            usageTips.textContent = getUsageTips(resource.category);
+        }
+        
+        // 加载相关资源
+        function loadRelatedResources(currentResource) {
+            const relatedContainer = document.getElementById('related-resources');
+            
+            // 查找同类别的其他资源
+            const relatedResources = ResourceManager.getResources()
+                .filter(r => r.category === currentResource.category && r.id.toString() !== currentResource.id.toString())
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 4);
+            
+            if (relatedResources.length === 0) {
+                relatedContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>没有找到相关资源</h3>
+                        <p>尝试查看其他分类的资源</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 显示相关资源
+            relatedContainer.innerHTML = '';
+            relatedResources.forEach(resource => {
+                const resourceElement = createRelatedResourceElement(resource);
+                relatedContainer.appendChild(resourceElement);
+            });
+        }
+        
+        // 创建相关资源卡片
+        function createRelatedResourceElement(resource) {
+            const div = document.createElement('div');
+            div.className = 'resource-card animate-on-scroll';
+            
+            // 生成星级评分
+            const stars = '★'.repeat(resource.rating) + '☆'.repeat(5 - resource.rating);
+            
+            // 生成标签HTML
+            const tagsHtml = resource.tags.map(tag => {
+                const tagText = Array.isArray(tag) ? tag.join('') : tag;
+                return `<span class="tag">${tagText}</span>`;
+            }).join('');
+            
+            // 免费/付费标签
+            const freeBadge = resource.free ? 
+                '<span class="free-badge">免费</span>' : 
+                '<span class="paid-badge">付费</span>';
+            
+            // 使用映射转换分类和年级
+            const displayCategory = Constants.categoryMap[resource.category] || resource.category;
+            const displayGrade = Constants.gradeMap[resource.grade] || resource.grade;
+            
+            // 为分类添加图标
+            const categoryIcon = getCategoryIcon(resource.category);
+            
+            div.innerHTML = `
+                <div class="resource-header">
+                    <div class="resource-meta">
+                        <span class="resource-category">
+                            <i class="${categoryIcon}"></i> ${displayCategory}
+                        </span>
+                        ${freeBadge}
+                    </div>
+                    <h3 class="resource-title">${resource.title}</h3>
+                    <p class="resource-description">${resource.description}</p>
+                    <div class="resource-tags">
+                        ${tagsHtml}
+                    </div>
+                </div>
+                <div class="resource-footer">
+                    <div class="resource-info">
+                        <span class="resource-grade">
+                            <i class="fas fa-user-graduate"></i> ${displayGrade}
+                        </span>
+                        <span class="resource-rating" title="评分：${resource.rating}/5">
+                            ${stars}
+                        </span>
+                    </div>
+                    <a href="resource-detail.html?id=${resource.id}" class="resource-link">
+                        <i class="fas fa-info-circle"></i> 查看详情
+                    </a>
+                </div>
+            `;
+            
+            return div;
+        }
+        
+        // 更新收藏按钮状态
+        function updateFavoriteButton(button, isFavorited) {
+            const icon = button.querySelector('i');
+            if (isFavorited) {
+                button.classList.add('favorited');
+                icon.className = 'fas fa-heart';
+                button.innerHTML = '<i class="fas fa-heart"></i> 已收藏';
+            } else {
+                button.classList.remove('favorited');
+                icon.className = 'far fa-heart';
+                button.innerHTML = '<i class="far fa-heart"></i> 收藏资源';
+            }
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            const content = document.getElementById('resource-content');
+            content.innerHTML = `
+                <div class="error-message">
+                    <h3><i class="fas fa-exclamation-circle"></i> 错误</h3>
+                    <p>${message}</p>
+                    <a href="resources.html" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-arrow-left"></i> 返回资源库
+                    </a>
+                </div>
+            `;
+            
+            // 隐藏相关资源
+            document.querySelector('.related-resources').style.display = 'none';
+        }
+        
+        // 根据分类获取使用建议
+        function getUsageTips(category) {
+            const tips = {
+                'learning': '这是一个学习资源，建议根据自身学习进度合理安排学习时间，结合实践加深理解。',
+                'internship': '这是一个实习就业资源，建议提前了解岗位要求，准备好简历和面试技巧，抓住机会。',
+                'competition': '这是一个竞赛资讯资源，建议仔细阅读竞赛规则，组建合适的团队，充分准备参赛材料。',
+                'tools': '这是一个实用工具资源，建议先了解工具的基本功能，通过教程和实践掌握使用技巧。'
+            };
+            
+            return tips[category] || '这是一个优质资源，建议根据自身需求合理使用。';
+        }
+    </script>
+</body>
+</html>

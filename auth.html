@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录/注册 - 问茧</title>
+    <meta name="description" content="问茧用户登录和注册页面，为大学生提供个性化资源管理服务">
+    <meta name="keywords" content="用户登录,用户注册,问茧,大学生资源平台">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            padding: 2rem;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-color);
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .form-group .error {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-login {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .social-login p {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: var(--light-gray);
+        }
+        
+        .social-login p::before {
+            left: 0;
+        }
+        
+        .social-login p::after {
+            right: 0;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--light-gray);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .social-btn.facebook i {
+            color: #3b5998;
+        }
+        
+        .social-btn.google i {
+            color: #db4437;
+        }
+        
+        .social-btn.github i {
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .auth-card {
+                padding: 2rem;
+            }
+            
+            .auth-tab {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .form-group input {
+                padding: 0.8rem;
+            }
+            
+            .auth-btn {
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 认证容器 -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">登录</div>
+                <div class="auth-tab" data-tab="register">注册</div>
+            </div>
+            
+            <!-- 登录表单 -->
+            <form class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-email">邮箱</label>
+                    <input type="email" id="login-email" placeholder="请输入邮箱地址" required>
+                    <div class="error" id="login-email-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" placeholder="请输入密码" required>
+                    <div class="error" id="login-password-error"></div>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; justify-content: space-between;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">记住我</span>
+                    </label>
+                    <a href="#" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">忘记密码？</a>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                
+                <div class="social-login">
+                    <p>或使用以下方式登录</p>
+                    <div class="social-buttons">
+                        <div class="social-btn facebook"><i class="fab fa-facebook-f"></i></div>
+                        <div class="social-btn google"><i class="fab fa-google"></i></div>
+                        <div class="social-btn github"><i class="fab fa-github"></i></div>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" placeholder="请输入用户名" required>
+                    <div class="error" id="register-username-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">邮箱</label>
+                    <input type="email" id="register-email" placeholder="请输入邮箱地址" required>
+                    <div class="error" id="register-email-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" placeholder="请输入密码（至少6位）" required>
+                    <div class="error" id="register-password-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">确认密码</label>
+                    <input type="password" id="register-confirm-password" placeholder="请再次输入密码" required>
+                    <div class="error" id="register-confirm-password-error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agree-terms" required>
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">我已阅读并同意<a href="#" style="color: var(--primary-color);">用户协议</a>和<a href="#" style="color: var(--primary-color);">隐私政策</a></span>
+                    </label>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-user-plus"></i> 注册
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p id="footer-text">还没有账号？<a href="#" id="toggle-register">立即注册</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=learning"><i class="fas fa-graduation-cap"></i> 学习资源</a></li>
+                    <li><a href="resources.html?category=internship"><i class="fas fa-briefcase"></i> 实习就业</a></li>
+                    <li><a href="resources.html?category=competition"><i class="fas fa-trophy"></i> 竞赛资讯</a></li>
+                    <li><a href="resources.html?category=tools"><i class="fas fa-tools"></i> 实用工具</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        // 认证页面脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签切换
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+            const footerText = document.getElementById('footer-text');
+            const toggleRegister = document.getElementById('toggle-register');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 切换标签
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 切换表单
+                    forms.forEach(form => form.classList.remove('active'));
+                    document.getElementById(`${tabId}-form`).classList.add('active');
+                    
+                    // 更新页脚文本
+                    if (tabId === 'login') {
+                        footerText.innerHTML = '还没有账号？<a href="#" id="toggle-register">立即注册</a>';
+                    } else {
+                        footerText.innerHTML = '已有账号？<a href="#" id="toggle-login">立即登录</a>';
+                    }
+                    
+                    // 重新绑定切换事件
+                    if (tabId === 'login') {
+                        document.getElementById('toggle-register').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.querySelector('[data-tab="register"]').click();
+                        });
+                    } else {
+                        document.getElementById('toggle-login').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.querySelector('[data-tab="login"]').click();
+                        });
+                    }
+                });
+            });
+            
+            // 登录表单提交
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 表单验证
+                if (validateLoginForm()) {
+                    // 模拟登录
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const rememberMe = document.getElementById('remember-me').checked;
+                    
+                    // 检查用户是否存在
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.email === email && u.password === password);
+                    
+                    if (user) {
+                        // 登录成功
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        
+                        // 显示成功消息
+                        alert('登录成功！');
+                        
+                        // 跳转到首页
+                        window.location.href = 'index.html';
+                    } else {
+                        // 登录失败
+                        document.getElementById('login-email-error').textContent = '邮箱或密码错误';
+                    }
+                }
+            });
+            
+            // 注册表单提交
+            const registerForm = document.getElementById('register-form');
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 表单验证
+                if (validateRegisterForm()) {
+                    // 模拟注册
+                    const username = document.getElementById('register-username').value;
+                    const email = document.getElementById('register-email').value;
+                    const password = document.getElementById('register-password').value;
+                    
+                    // 检查用户是否已存在
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const existingUser = users.find(u => u.email === email);
+                    
+                    if (existingUser) {
+                        document.getElementById('register-email-error').textContent = '该邮箱已被注册';
+                    } else {
+                        // 创建新用户
+                        const newUser = {
+                            id: Date.now(),
+                            username: username,
+                            email: email,
+                            password: password,
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // 保存用户
+                        users.push(newUser);
+                        localStorage.setItem('users', JSON.stringify(users));
+                        localStorage.setItem('currentUser', JSON.stringify(newUser));
+                        
+                        // 显示成功消息
+                        alert('注册成功！');
+                        
+                        // 跳转到首页
+                        window.location.href = 'index.html';
+                    }
+                }
+            });
+            
+            // 登录表单验证
+            function validateLoginForm() {
+                let isValid = true;
+                
+                const email = document.getElementById('login-email');
+                const password = document.getElementById('login-password');
+                
+                // 邮箱验证
+                if (!email.value) {
+                    document.getElementById('login-email-error').textContent = '请输入邮箱';
+                    isValid = false;
+                } else if (!isValidEmail(email.value)) {
+                    document.getElementById('login-email-error').textContent = '请输入有效的邮箱地址';
+                    isValid = false;
+                } else {
+                    document.getElementById('login-email-error').textContent = '';
+                }
+                
+                // 密码验证
+                if (!password.value) {
+                    document.getElementById('login-password-error').textContent = '请输入密码';
+                    isValid = false;
+                } else {
+                    document.getElementById('login-password-error').textContent = '';
+                }
+                
+                return isValid;
+            }
+            
+            // 注册表单验证
+            function validateRegisterForm() {
+                let isValid = true;
+                
+                const username = document.getElementById('register-username');
+                const email = document.getElementById('register-email');
+                const password = document.getElementById('register-password');
+                const confirmPassword = document.getElementById('register-confirm-password');
+                const agreeTerms = document.getElementById('agree-terms');
+                
+                // 用户名验证
+                if (!username.value) {
+                    document.getElementById('register-username-error').textContent = '请输入用户名';
+                    isValid = false;
+                } else if (username.value.length < 3) {
+                    document.getElementById('register-username-error').textContent = '用户名至少3个字符';
+                    isValid = false;
+                } else {
+                    document.getElementById('register-username-error').textContent = '';
+                }
+                
+                // 邮箱验证
+                if (!email.value) {
+                    document.getElementById('register-email-error').textContent = '请输入邮箱';
+                    isValid = false;
+                } else if (!isValidEmail(email.value)) {
+                    document.getElementById('register-email-error').textContent = '请输入有效的邮箱地址';
+                    isValid = false;
+                } else {
+                    document.getElementById('register-email-error').textContent = '';
+                }
+                
+                // 密码验证
+                if (!password.value) {
+                    document.getElementById('register-password-error').textContent = '请输入密码';
+                    isValid = false;
+                } else if (password.value.length < 6) {
+                    document.getElementById('register-password-error').textContent = '密码至少6个字符';
+                    isValid = false;
+                } else {
+                    document.getElementById('register-password-error').textContent = '';
+                }
+                
+                // 确认密码验证
+                if (!confirmPassword.value) {
+                    document.getElementById('register-confirm-password-error').textContent = '请确认密码';
+                    isValid = false;
+                } else if (confirmPassword.value !== password.value) {
+                    document.getElementById('register-confirm-password-error').textContent = '两次输入的密码不一致';
+                    isValid = false;
+                } else {
+                    document.getElementById('register-confirm-password-error').textContent = '';
+                }
+                
+                // 同意条款验证
+                if (!agreeTerms.checked) {
+                    alert('请阅读并同意用户协议和隐私政策');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // 邮箱格式验证
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // 绑定切换注册事件
+            toggleRegister.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('[data-tab="register"]').click();
+            });
+            
+            // 社交登录按钮
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const platform = this.classList[1];
+                    alert(`${platform} 登录功能暂未开放，敬请期待！`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
