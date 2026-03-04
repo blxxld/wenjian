@@ -7,10 +7,10 @@
 
 :root {
     /* 主题颜色 - 现代和谐配色方案 */
-    --primary-color: #4361ee;
-    --primary-hover: #3a0ca3;
-    --secondary-color: #4cc9f0;
-    --accent-color: #f72585;
+    --primary-color: #3a86ff;
+    --primary-hover: #2563eb;
+    --secondary-color: #8b5cf6;
+    --accent-color: #ec4899;
     --light-color: #f8f9fa;
     --dark-color: #2b2d42;
     --gray-color: #6c757d;
@@ -521,27 +521,23 @@ body {
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     opacity: 0;
     animation: fadeInUp 0.8s ease-out forwards;
-    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
     letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
     font-size: clamp(1.2rem, 3vw, 1.8rem);
     margin-bottom: 2rem;
-    opacity: 0.95;
     opacity: 0;
     animation: fadeInUp 0.8s ease-out 0.2s forwards;
     font-weight: 500;
     letter-spacing: 0.01em;
+    color: #f0f9ff;
 }
 
 .hero-description {
     font-size: clamp(1rem, 2vw, 1.3rem);
     margin-bottom: 3rem;
-    opacity: 0.9;
     max-width: 650px;
     margin-left: auto;
     margin-right: auto;
@@ -549,6 +545,7 @@ body {
     animation: fadeInUp 0.8s ease-out 0.4s forwards;
     line-height: 1.7;
     letter-spacing: 0.01em;
+    color: #e0f2fe;
 }
 
 .hero-buttons {
@@ -1277,10 +1274,11 @@ body {
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(67, 97, 238, 0.05);
+    background: rgba(58, 134, 255, 0.05);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: width 0.6s, height 0.6s;
+    z-index: 1;
 }
 
 .category-card:hover::after {
@@ -1338,6 +1336,8 @@ body {
     transition: var(--transition);
     font-size: 1.05rem;
     position: relative;
+    z-index: 10;
+    cursor: pointer;
 }
 
 .category-link::after {
@@ -2277,6 +2277,13 @@ body {
         font-size: 1rem;
     }
     
+    .search-history-link {
+        right: 1rem;
+        top: 35%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+    }
+    
     /* 资源详情页 */
     .resource-detail {
         padding: 2rem 0;
@@ -2458,6 +2465,12 @@ body {
     
     .search-box button {
         padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .search-history-link {
+        right: 0.8rem;
+        top: 35%;
         font-size: 0.9rem;
     }
     
