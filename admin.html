@@ -1,559 +1,629 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>资源管理后台</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 问茧</title>
+    <meta name="description" content="问茧管理后台，用于审核资源和管理用户">
+    <meta name="keywords" content="管理后台,资源审核,用户管理,问茧">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            padding: 20px; 
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #f5f5f5;
+        .admin-container {
+            min-height: 100vh;
+            background: #f5f7fa;
         }
-        .form-container {
+        
+        .admin-sidebar {
+            width: 250px;
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            padding: 2rem 0;
+            z-index: 1000;
         }
-        .form-group { 
-            margin: 15px 0; 
+        
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 2rem;
         }
-        label { 
-            display: block; 
-            margin: 5px 0;
-            font-weight: bold;
-            color: #333;
+        
+        .admin-logo i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
         }
-        input, textarea, select { 
-            width: 100%; 
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
+        
+        .admin-logo h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--dark-color);
         }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        
+        .admin-nav {
+            padding: 0 1rem;
         }
-        button { 
-            padding: 10px 20px; 
-            background: #4361ee; 
-            color: white; 
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #3a56d4;
-        }
-        button.secondary {
-            background: #6c757d;
-        }
-        button.danger {
-            background: #dc3545;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        #resource-list {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .resource-item { 
-            border: 1px solid #ddd; 
-            padding: 15px; 
-            margin: 10px 0;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            transition: box-shadow 0.3s;
-        }
-        .resource-item:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .resource-content {
-            flex: 1;
-        }
-        .resource-actions {
-            display: flex;
-            gap: 10px;
-            margin-left: 15px;
-        }
-        .resource-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
-            color: #333;
-        }
-        .resource-meta {
-            display: flex;
-            gap: 15px;
-            margin: 10px 0;
-            font-size: 14px;
-            color: #666;
-        }
-        .resource-meta span {
-            background: #f0f2f5;
-            padding: 3px 10px;
-            border-radius: 15px;
-        }
-        .resource-desc {
-            margin: 10px 0;
-            color: #444;
-            line-height: 1.5;
-        }
-        .resource-url {
-            color: #4361ee;
+        
+        .admin-nav-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--gray-color);
             text-decoration: none;
-            font-size: 14px;
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
-        .resource-url:hover {
-            text-decoration: underline;
+        
+        .admin-nav-item:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
         }
-        .tag {
-            display: inline-block;
-            background: #e9ecef;
-            padding: 3px 8px;
-            margin: 2px;
-            border-radius: 12px;
-            font-size: 12px;
+        
+        .admin-nav-item.active {
+            background: var(--primary-color);
+            color: white;
         }
-        .stars {
-            color: #ffc107;
-            margin: 5px 0;
+        
+        .admin-content {
+            margin-left: 250px;
+            padding: 2rem;
+            min-height: 100vh;
         }
-        .header {
+        
+        .admin-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
-        .search-box {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 300px;
+        
+        .admin-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--dark-color);
         }
-        .free-badge {
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-user-info {
+            text-align: right;
+        }
+        
+        .admin-user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .admin-user-role {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-card-title {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--dark-color);
+        }
+        
+        .admin-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .admin-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .admin-btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .admin-btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark-color);
+        }
+        
+        .admin-btn-secondary:hover {
+            background: var(--gray-color);
+            color: white;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .admin-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .admin-table tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .admin-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .admin-badge-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .admin-badge-approved {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        
+        .admin-badge-rejected {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .admin-action-btn {
+            padding: 0.25rem 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-action-approve {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        
+        .admin-action-approve:hover {
             background: #28a745;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
         }
-        .paid-badge {
+        
+        .admin-action-reject {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+        
+        .admin-action-reject:hover {
             background: #dc3545;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
+        }
+        
+        .admin-action-view {
+            background: rgba(67, 97, 238, 0.2);
+            color: var(--primary-color);
+        }
+        
+        .admin-action-view:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .admin-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .admin-nav {
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+            }
+            
+            .admin-nav-item {
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📚 资源管理后台</h1>
-        <div>
-            <button onclick="exportData()" class="secondary">导出JSON</button>
-            <button onclick="importData()" class="secondary">导入数据</button>
-            <button onclick="clearAllData()" class="danger">清空数据</button>
-        </div>
-    </div>
-    
-    <div class="form-container">
-        <h2 id="form-title">添加新资源</h2>
-        <form id="resource-form">
-            <input type="hidden" id="edit-id" value="">
-            
-            <div class="form-group">
-                <label>资源标题：</label>
-                <input type="text" id="title" required placeholder="输入资源标题">
+    <!-- 管理后台容器 -->
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-shield-alt"></i>
+                <h2>管理后台</h2>
             </div>
-            
-            <div class="form-group">
-                <label>分类：</label>
-                <select id="category">
-                    <option value="learning">学习资源</option>
-                    <option value="internship">实习就业</option>
-                    <option value="competition">竞赛资讯</option>
-                    <option value="tools">实用工具</option>
-                    <option value="community">社区论坛</option>
-                    <option value="course">课程资料</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>描述：</label>
-                <textarea id="description" rows="3" placeholder="详细描述资源内容..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>链接：</label>
-                <input type="url" id="url" required placeholder="https://example.com">
-            </div>
-            
-            <div class="form-group">
-                <label>评分（1-5）：</label>
-                <input type="number" id="rating" min="1" max="5" value="4" step="0.5">
-            </div>
-            
-            <div class="form-group">
-                <label>是否免费：</label>
-                <select id="free">
-                    <option value="true">免费</option>
-                    <option value="false">收费</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>适用年级：</label>
-                <select id="grade">
-                    <option value="all">全部</option>
-                    <option value="freshman">大一</option>
-                    <option value="sophomore">大二</option>
-                    <option value="junior">大三</option>
-                    <option value="senior">大四</option>
-                    <option value="graduate">研究生</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>标签（用逗号分隔）：</label>
-                <input type="text" id="tags" placeholder="例如：编程,学习,免费,在线课程">
-            </div>
-            
-            <div class="button-group">
-                <button type="submit" id="submit-btn">添加资源</button>
-                <button type="button" onclick="resetForm()" class="secondary" id="cancel-btn" style="display:none;">取消编辑</button>
-            </div>
-        </form>
-    </div>
-    
-    <div id="resource-list">
-        <div class="header">
-            <h2>资源列表 (共 <span id="resource-count">0</span> 个)</h2>
-            <input type="text" class="search-box" id="search-input" placeholder="搜索资源标题或描述..." onkeyup="filterResources()">
+            <nav class="admin-nav">
+                <a href="#resources" class="admin-nav-item active" data-tab="resources">
+                    <i class="fas fa-book"></i>
+                    <span>资源审核</span>
+                </a>
+                <a href="#users" class="admin-nav-item" data-tab="users">
+                    <i class="fas fa-users"></i>
+                    <span>用户管理</span>
+                </a>
+                <a href="#stats" class="admin-nav-item" data-tab="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>统计分析</span>
+                </a>
+                <a href="#settings" class="admin-nav-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
         </div>
         
-        <div id="resources-container">
-            <p style="text-align: center; color: #666;">暂无资源，请添加第一个资源</p>
-        </div>
-    </div>
-
-    <input type="file" id="import-file" style="display: none;" accept=".json">
-
-    <script>
-        // 资源管理类
-        class ResourceManager {
-            constructor() {
-                this.resources = [];
-                this.loadFromStorage();
-                this.initEventListeners();
-                this.displayResources();
-            }
-            
-            loadFromStorage() {
-                try {
-                    const saved = localStorage.getItem('resources');
-                    this.resources = saved ? JSON.parse(saved) : [];
-                    console.log(`已加载 ${this.resources.length} 个资源`);
-                } catch (error) {
-                    console.error('加载数据失败:', error);
-                    this.resources = [];
-                }
-            }
-            
-            saveToStorage() {
-                try {
-                    localStorage.setItem('resources', JSON.stringify(this.resources));
-                } catch (error) {
-                    console.error('保存数据失败:', error);
-                }
-            }
-            
-            initEventListeners() {
-                const form = document.getElementById('resource-form');
-                form.addEventListener('submit', (e) => this.handleSubmit(e));
-                
-                // 导入文件
-                document.getElementById('import-file').addEventListener('change', (e) => {
-                    this.handleImport(e);
-                });
-            }
-            
-            handleSubmit(e) {
-                e.preventDefault();
-                
-                const idInput = document.getElementById('edit-id');
-                const title = document.getElementById('title').value;
-                const category = document.getElementById('category').value;
-                const description = document.getElementById('description').value;
-                const url = document.getElementById('url').value;
-                const rating = parseFloat(document.getElementById('rating').value);
-                const free = document.getElementById('free').value === 'true';
-                const grade = document.getElementById('grade').value;
-                const tags = document.getElementById('tags').value
-                    .split(',')
-                    .map(tag => tag.trim())
-                    .filter(tag => tag.length > 0);
-                
-                const resourceData = {
-                    title,
-                    category,
-                    description,
-                    url,
-                    rating,
-                    free,
-                    grade,
-                    tags
-                };
-                
-                if (idInput.value) {
-                    // 编辑现有资源
-                    const id = parseInt(idInput.value);
-                    const index = this.resources.findIndex(r => r.id === id);
-                    if (index !== -1) {
-                        this.resources[index] = { ...this.resources[index], ...resourceData };
-                        this.saveToStorage();
-                        this.displayResources();
-                        this.resetForm();
-                        alert('资源更新成功！');
-                    }
-                } else {
-                    // 添加新资源
-                    const newResource = {
-                        id: Date.now(), // 使用时间戳作为唯一ID
-                        ...resourceData,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    this.resources.push(newResource);
-                    this.saveToStorage();
-                    this.displayResources();
-                    document.getElementById('resource-form').reset();
-                    alert('资源添加成功！');
-                }
-            }
-            
-            displayResources(filteredResources = null) {
-                const container = document.getElementById('resources-container');
-                const resourcesToShow = filteredResources || this.resources;
-                
-                document.getElementById('resource-count').textContent = resourcesToShow.length;
-                
-                if (resourcesToShow.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666;">暂无资源</p>';
-                    return;
-                }
-                
-                container.innerHTML = resourcesToShow.map(resource => `
-                    <div class="resource-item" data-id="${resource.id}">
-                        <div class="resource-content">
-                            <div class="resource-title">${resource.title}</div>
-                            <div class="resource-meta">
-                                <span>${this.getCategoryName(resource.category)}</span>
-                                <span>适用: ${this.getGradeName(resource.grade)}</span>
-                                <span class="${resource.free ? 'free-badge' : 'paid-badge'}">
-                                    ${resource.free ? '免费' : '收费'}
-                                </span>
-                                <div class="stars">${'★'.repeat(Math.floor(resource.rating))}${'☆'.repeat(5-Math.floor(resource.rating))} (${resource.rating})</div>
-                            </div>
-                            <div class="resource-desc">${resource.description}</div>
-                            <div>
-                                ${resource.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
-                            </div>
-                            <a href="${resource.url}" target="_blank" class="resource-url">${resource.url}</a>
-                        </div>
-                        <div class="resource-actions">
-                            <button onclick="resourceManager.editResource(${resource.id})">编辑</button>
-                            <button onclick="resourceManager.deleteResource(${resource.id})" class="danger">删除</button>
-                        </div>
+        <!-- 主内容区 -->
+        <div class="admin-content">
+            <!-- 头部 -->
+            <div class="admin-header">
+                <h1>资源审核</h1>
+                <div class="admin-user">
+                    <div class="admin-user-info">
+                        <div class="admin-user-name" id="admin-username">管理员</div>
+                        <div class="admin-user-role">系统管理员</div>
                     </div>
-                `).join('');
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary-color);"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 资源审核卡片 -->
+            <div class="admin-card" id="resources-tab">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">待审核资源</h3>
+                    <button class="admin-btn admin-btn-secondary" id="refresh-resources">
+                        <i class="fas fa-sync"></i>
+                        刷新列表
+                    </button>
+                </div>
+                <div class="admin-table-container">
+                    <table class="admin-table" id="resources-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>标题</th>
+                                <th>提交者</th>
+                                <th>分类</th>
+                                <th>状态</th>
+                                <th>提交时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resources-body">
+                            <!-- 动态生成内容 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 用户管理卡片 -->
+            <div class="admin-card" id="users-tab" style="display: none;">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">用户管理</h3>
+                    <button class="admin-btn admin-btn-primary" id="add-user">
+                        <i class="fas fa-plus"></i>
+                        添加用户
+                    </button>
+                </div>
+                <div class="admin-table-container">
+                    <table class="admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户名</th>
+                                <th>邮箱</th>
+                                <th>积分</th>
+                                <th>角色</th>
+                                <th>注册时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body">
+                            <!-- 动态生成内容 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否为管理员
+            if (!UserManager.isAdmin()) {
+                alert('您没有管理员权限');
+                window.location.href = 'index.html';
+                return;
             }
             
-            editResource(id) {
-                const resource = this.resources.find(r => r.id === id);
-                if (!resource) return;
-                
-                document.getElementById('edit-id').value = resource.id;
-                document.getElementById('title').value = resource.title;
-                document.getElementById('category').value = resource.category;
-                document.getElementById('description').value = resource.description;
-                document.getElementById('url').value = resource.url;
-                document.getElementById('rating').value = resource.rating;
-                document.getElementById('free').value = resource.free.toString();
-                document.getElementById('grade').value = resource.grade;
-                document.getElementById('tags').value = resource.tags.join(', ');
-                
-                document.getElementById('form-title').textContent = '编辑资源';
-                document.getElementById('submit-btn').textContent = '更新资源';
-                document.getElementById('cancel-btn').style.display = 'inline-block';
-                
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 更新管理员名称
+            const user = UserManager.getCurrentUser();
+            if (user) {
+                document.getElementById('admin-username').textContent = user.username;
             }
             
-            deleteResource(id) {
-                if (!confirm('确定要删除这个资源吗？')) return;
-                
-                const index = this.resources.findIndex(r => r.id === id);
-                if (index !== -1) {
-                    this.resources.splice(index, 1);
-                    this.saveToStorage();
-                    this.displayResources();
-                    alert('资源已删除！');
-                }
-            }
+            // 标签切换
+            const navItems = document.querySelectorAll('.admin-nav-item');
+            const tabs = ['resources-tab', 'users-tab'];
             
-            filterResources() {
-                const searchTerm = document.getElementById('search-input').value.toLowerCase();
-                if (!searchTerm.trim()) {
-                    this.displayResources();
-                    return;
-                }
-                
-                const filtered = this.resources.filter(resource => 
-                    resource.title.toLowerCase().includes(searchTerm) ||
-                    resource.description.toLowerCase().includes(searchTerm) ||
-                    resource.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-                );
-                
-                this.displayResources(filtered);
-            }
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有活动状态
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    tabs.forEach(tab => document.getElementById(tab).style.display = 'none');
+                    
+                    // 添加活动状态
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).style.display = 'block';
+                    
+                    // 更新标题
+                    document.querySelector('.admin-header h1').textContent = this.querySelector('span').textContent;
+                });
+            });
             
-            resetForm() {
-                document.getElementById('resource-form').reset();
-                document.getElementById('edit-id').value = '';
-                document.getElementById('form-title').textContent = '添加新资源';
-                document.getElementById('submit-btn').textContent = '添加资源';
-                document.getElementById('cancel-btn').style.display = 'none';
-            }
+            // 加载待审核资源
+            loadPendingResources();
             
-            handleImport(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        if (Array.isArray(importedData)) {
-                            // 合并导入的数据，避免ID冲突
-                            const existingIds = new Set(this.resources.map(r => r.id));
-                            const newResources = importedData.filter(item => {
-                                // 如果已有相同ID，使用新时间戳
-                                if (existingIds.has(item.id)) {
-                                    item.id = Date.now() + Math.random();
-                                }
-                                return true;
-                            });
-                            
-                            this.resources.push(...newResources);
-                            this.saveToStorage();
-                            this.displayResources();
-                            alert(`成功导入 ${newResources.length} 个资源！`);
-                        } else {
-                            alert('导入的文件格式不正确！');
-                        }
-                    } catch (error) {
-                        alert('导入失败：文件格式错误！');
-                        console.error(error);
-                    }
-                };
-                reader.readAsText(file);
-                
-                // 清空文件输入
-                event.target.value = '';
-            }
+            // 加载用户列表
+            loadUsers();
             
-            exportData() {
-                const dataStr = JSON.stringify(this.resources, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `resources_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-            
-            clearAllData() {
-                if (confirm('确定要清空所有数据吗？此操作不可撤销！')) {
-                    this.resources = [];
-                    this.saveToStorage();
-                    this.displayResources();
-                    alert('所有数据已清空！');
-                }
-            }
-            
-            getCategoryName(category) {
-                const categories = {
-                    'learning': '学习资源',
-                    'internship': '实习就业',
-                    'competition': '竞赛资讯',
-                    'tools': '实用工具',
-                    'community': '社区论坛',
-                    'course': '课程资料'
-                };
-                return categories[category] || category;
-            }
-            
-            getGradeName(grade) {
-                const grades = {
-                    'all': '全部',
-                    'freshman': '大一',
-                    'sophomore': '大二',
-                    'junior': '大三',
-                    'senior': '大四',
-                    'graduate': '研究生'
-                };
-                return grades[grade] || grade;
-            }
-        }
-        
-        // 初始化资源管理器
-        const resourceManager = new ResourceManager();
-        
-        // 全局函数
-        function exportData() {
-            resourceManager.exportData();
-        }
-        
-        function importData() {
-            document.getElementById('import-file').click();
-        }
-        
-        function clearAllData() {
-            resourceManager.clearAllData();
-        }
-        
-        function resetForm() {
-            resourceManager.resetForm();
-        }
-        
-        function filterResources() {
-            resourceManager.filterResources();
-        }
-        
-        // 页面加载时显示示例数据（如果本地存储为空）
-        window.addEventListener('DOMContentLoaded', () => {
-            if (resourceManager.resources.length === 0) {
-                // 可以在这里添加一些示例数据
-                // resourceManager.resources.push(...exampleData);
-            }
+            // 刷新按钮事件
+            document.getElementById('refresh-resources').addEventListener('click', loadPendingResources);
         });
+        
+        // 加载待审核资源
+        function loadPendingResources() {
+            const resourcesBody = document.getElementById('resources-body');
+            const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+            
+            if (pendingResources.length === 0) {
+                resourcesBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 3rem;">
+                            <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                            <p style="font-size: 1.1rem; color: var(--gray-color);">暂无待审核资源</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            resourcesBody.innerHTML = '';
+            
+            pendingResources.forEach(resource => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${resource.id}</td>
+                    <td>${resource.title}</td>
+                    <td>${resource.submitter}</td>
+                    <td>${resource.category}</td>
+                    <td><span class="admin-badge admin-badge-pending">待审核</span></td>
+                    <td>${new Date(resource.submittedAt).toLocaleString()}</td>
+                    <td class="admin-actions">
+                        <button class="admin-action-btn admin-action-view" onclick="viewResource(${resource.id})">查看</button>
+                        <button class="admin-action-btn admin-action-approve" onclick="approveResource(${resource.id})">通过</button>
+                        <button class="admin-action-btn admin-action-reject" onclick="rejectResource(${resource.id})">拒绝</button>
+                    </td>
+                `;
+                resourcesBody.appendChild(row);
+            });
+        }
+        
+        // 加载用户列表
+        function loadUsers() {
+            const usersBody = document.getElementById('users-body');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.length === 0) {
+                usersBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 3rem;">
+                            <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                            <p style="font-size: 1.1rem; color: var(--gray-color);">暂无用户</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            usersBody.innerHTML = '';
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                const userPoints = PointsManager.getUserPoints(user.username);
+                const role = user.role || 'user';
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${userPoints.points}</td>
+                    <td>${role === 'admin' ? '管理员' : '普通用户'}</td>
+                    <td>${new Date(user.createdAt).toLocaleString()}</td>
+                    <td class="admin-actions">
+                        <button class="admin-action-btn admin-action-view" onclick="viewUser(${user.id})">查看</button>
+                        ${role !== 'admin' ? '<button class="admin-action-btn admin-action-approve" onclick="makeAdmin(${user.id})">设为管理员</button>' : ''}
+                    </td>
+                `;
+                usersBody.appendChild(row);
+            });
+        }
+        
+        // 查看资源
+        function viewResource(resourceId) {
+            const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+            const resource = pendingResources.find(r => r.id === resourceId);
+            
+            if (resource) {
+                alert(`资源详情：
+标题：${resource.title}
+描述：${resource.description}
+链接：${resource.url}
+分类：${resource.category}
+年级：${resource.grade}
+是否免费：${resource.free ? '是' : '否'}
+提交者：${resource.submitter}
+提交时间：${new Date(resource.submittedAt).toLocaleString()}`);
+            }
+        }
+        
+        // 审核通过资源
+        function approveResource(resourceId) {
+            if (confirm('确定要通过这个资源吗？')) {
+                const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+                const resourceIndex = pendingResources.findIndex(r => r.id === resourceId);
+                
+                if (resourceIndex !== -1) {
+                    const resource = pendingResources[resourceIndex];
+                    
+                    // 加载现有资源
+                    const existingResources = JSON.parse(localStorage.getItem('resources') || '[]');
+                    
+                    // 添加新资源
+                    existingResources.push({
+                        id: existingResources.length + 1,
+                        title: resource.title,
+                        description: resource.description,
+                        url: resource.url,
+                        category: resource.category,
+                        grade: resource.grade,
+                        free: resource.free,
+                        rating: 0,
+                        tags: resource.tags || []
+                    });
+                    
+                    // 保存资源
+                    localStorage.setItem('resources', JSON.stringify(existingResources));
+                    
+                    // 从待审核列表中移除
+                    pendingResources.splice(resourceIndex, 1);
+                    localStorage.setItem('pendingResources', JSON.stringify(pendingResources));
+                    
+                    // 给用户添加积分（审核通过额外积分）
+                    PointsManager.addPoints(resource.submitter, 20, 'resourceApproved');
+                    
+                    alert('资源审核通过！');
+                    loadPendingResources();
+                }
+            }
+        }
+        
+        // 拒绝资源
+        function rejectResource(resourceId) {
+            if (confirm('确定要拒绝这个资源吗？')) {
+                const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+                const resourceIndex = pendingResources.findIndex(r => r.id === resourceId);
+                
+                if (resourceIndex !== -1) {
+                    // 从待审核列表中移除
+                    pendingResources.splice(resourceIndex, 1);
+                    localStorage.setItem('pendingResources', JSON.stringify(pendingResources));
+                    
+                    alert('资源已拒绝！');
+                    loadPendingResources();
+                }
+            }
+        }
+        
+        // 查看用户
+        function viewUser(userId) {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.id === userId);
+            
+            if (user) {
+                const userPoints = PointsManager.getUserPoints(user.username);
+                alert(`用户详情：
+用户名：${user.username}
+邮箱：${user.email}
+积分：${userPoints.points}
+角色：${user.role || '普通用户'}
+注册时间：${new Date(user.createdAt).toLocaleString()}`);
+            }
+        }
+        
+        // 设置为管理员
+        function makeAdmin(userId) {
+            if (confirm('确定要将此用户设为管理员吗？')) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === userId);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].role = 'admin';
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    alert('用户已设为管理员！');
+                    loadUsers();
+                }
+            }
+        }
     </script>
 </body>
 </html>

@@ -188,10 +188,8 @@
                         <label for="resourceCategory" class="form-label">资源分类 *</label>
                         <select id="resourceCategory" class="form-select" required>
                             <option value="">请选择分类</option>
-                            <option value="learning">学习资源</option>
-                            <option value="internship">实习就业</option>
-                            <option value="competition">竞赛资讯</option>
-                            <option value="tools">实用工具</option>
+                            <option value="website">网站类</option>
+                            <option value="information">信息类</option>
                         </select>
                         <div class="error-message" id="resourceCategoryError">请选择资源分类</div>
                     </div>
@@ -276,10 +274,8 @@
             <div class="footer-section">
                 <h4>资源分类</h4>
                 <ul>
-                    <li><a href="resources.html?category=learning"><i class="fas fa-graduation-cap"></i> 学习资源</a></li>
-                    <li><a href="resources.html?category=internship"><i class="fas fa-briefcase"></i> 实习就业</a></li>
-                    <li><a href="resources.html?category=competition"><i class="fas fa-trophy"></i> 竞赛资讯</a></li>
-                    <li><a href="resources.html?category=tools"><i class="fas fa-tools"></i> 实用工具</a></li>
+                    <li><a href="resources.html?category=website"><i class="fas fa-globe"></i> 网站类</a></li>
+                    <li><a href="resources.html?category=information"><i class="fas fa-newspaper"></i> 信息类</a></li>
                 </ul>
             </div>
             
@@ -324,11 +320,26 @@
                 userEmail: document.getElementById('userEmail').value
             };
             
-            // 模拟提交（实际项目中可以发送到后端）
-            console.log('提交的资源数据:', formData);
-            
             // 检查用户是否登录，给予积分奖励
             const currentUser = UserManager.getCurrentUser();
+            
+            // 保存到待审核列表
+            const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
+            const newResource = {
+                id: pendingResources.length + 1,
+                title: formData.title,
+                description: formData.description,
+                url: formData.url,
+                category: formData.category,
+                grade: formData.grade,
+                free: formData.free,
+                tags: formData.tags,
+                submitter: currentUser ? currentUser.username : formData.userName,
+                submittedAt: new Date().toISOString()
+            };
+            pendingResources.push(newResource);
+            localStorage.setItem('pendingResources', JSON.stringify(pendingResources));
+            console.log('资源已添加到待审核列表:', newResource);
             if (currentUser) {
                 // 给用户添加积分
                 const updatedUser = PointsManager.addPoints(currentUser.username, PointsManager.pointConfig.submitResource, 'submitResource');

@@ -24,6 +24,7 @@
             border: 1px solid rgba(58, 134, 255, 0.1);
             backdrop-filter: blur(10px);
             background: linear-gradient(10deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 100%);
+            position: relative;
         }
         
         .ranking-header {
@@ -48,10 +49,29 @@
             justify-content: center;
             gap: 3rem;
             margin-bottom: 4rem;
+            position: relative;
         }
         
         .trophy-item {
             text-align: center;
+            transition: all 0.5s ease;
+        }
+        
+        .trophy-item.updated {
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
         
         .trophy-icon {
@@ -100,6 +120,7 @@
             padding: 1.2rem 1.5rem;
             text-align: left;
             border-bottom: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
         }
         
         .ranking-table th {
@@ -110,6 +131,19 @@
         
         .ranking-table tr:hover {
             background-color: rgba(58, 134, 255, 0.05);
+        }
+        
+        .ranking-table tr.updated {
+            animation: highlight 1s ease-in-out;
+        }
+        
+        @keyframes highlight {
+            0% {
+                background-color: rgba(76, 201, 240, 0.3);
+            }
+            100% {
+                background-color: transparent;
+            }
         }
         
         .rank-number {
@@ -175,6 +209,30 @@
             color: var(--gray-color);
         }
         
+        .ranking-points {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .ranking-points.increased {
+            color: var(--success-color);
+            animation: increase 0.5s ease;
+        }
+        
+        @keyframes increase {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
         .current-user {
             background-color: rgba(76, 201, 240, 0.1) !important;
             border-left: 4px solid var(--primary-color);
@@ -236,6 +294,94 @@
             color: var(--warning-color);
             margin-top: 1rem;
         }
+        
+        /* ==================== 排行榜标签页 ==================== */
+        .ranking-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .ranking-tab {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            background: var(--light-bg);
+            color: var(--gray-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+        }
+        
+        .ranking-tab:hover {
+            background: var(--gray-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .ranking-tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* ==================== 前三名称号 ==================== */
+        .trophy-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .trophy-title.gold {
+            color: #FFD700;
+        }
+        
+        .trophy-title.silver {
+            color: #C0C0C0;
+        }
+        
+        .trophy-title.bronze {
+            color: #CD7F32;
+        }
+        
+        /* ==================== 实时更新指示器 ==================== */
+        .update-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .update-indicator .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            animation: pulse-dot 2s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .update-indicator .last-updated {
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -273,9 +419,22 @@
     <main class="container">
         <section class="section">
             <div class="ranking-container animate-on-scroll">
+                <!-- 实时更新指示器 -->
+                <div class="update-indicator">
+                    <div class="status-dot"></div>
+                    <span class="last-updated" id="lastUpdated">最后更新: 刚刚</span>
+                </div>
+                
                 <div class="ranking-header">
                     <h1><i class="fas fa-trophy"></i> 积分排行榜</h1>
                     <p>根据用户提交资源、每日登录等行为获得积分，排名实时更新</p>
+                    
+                    <!-- 排行榜类型切换 -->
+                    <div class="ranking-tabs">
+                        <button class="ranking-tab active" data-type="total">总榜</button>
+                        <button class="ranking-tab" data-type="weekly">周榜</button>
+                        <button class="ranking-tab" data-type="daily">日榜</button>
+                    </div>
                 </div>
 
                 <!-- 前三名奖杯展示 -->
@@ -352,22 +511,33 @@
     <!-- JavaScript文件 -->
     <script src="js/main.js"></script>
     <script>
+        // 当前排行榜类型
+        let currentRankingType = 'total';
+        // 存储之前的排行榜数据，用于检测变化
+        let previousRanking = [];
+        // 存储之前的前三名数据
+        let previousTopThree = [];
+        
         // 加载排行榜数据
         function loadRanking() {
-            const ranking = PointsManager.getRanking(20);
+            const ranking = PointsManager.getRanking(20, currentRankingType);
             const currentUser = UserManager.getCurrentUser();
             
-            // 渲染前三名
+            // 检测变化并渲染
             renderTopThree(ranking.slice(0, 3));
-            
-            // 渲染排行榜表格
             renderRankingTable(ranking, currentUser);
+            
+            // 更新最后更新时间
+            updateLastUpdated();
+            
+            // 保存当前数据用于下次比较
+            previousRanking = ranking;
+            previousTopThree = ranking.slice(0, 3);
         }
         
         // 渲染前三名
         function renderTopThree(topThree) {
             const container = document.getElementById('topThreeContainer');
-            container.innerHTML = '';
             
             if (topThree.length === 0) {
                 container.innerHTML = `
@@ -381,17 +551,28 @@
             }
             
             const trophies = [
-                { class: 'gold', icon: '🥇' },
-                { class: 'silver', icon: '🥈' },
-                { class: 'bronze', icon: '🥉' }
+                { class: 'gold', icon: '🥇', title: '积分之王' },
+                { class: 'silver', icon: '🥈', title: '贡献达人' },
+                { class: 'bronze', icon: '🥉', title: '活跃用户' }
             ];
+            
+            // 清空容器
+            container.innerHTML = '';
             
             topThree.forEach((user, index) => {
                 if (trophies[index]) {
                     const trophyItem = document.createElement('div');
                     trophyItem.className = 'trophy-item';
+                    
+                    // 检测是否有变化
+                    const hasChanged = checkTopThreeChange(user, index);
+                    if (hasChanged) {
+                        trophyItem.classList.add('updated');
+                    }
+                    
                     trophyItem.innerHTML = `
                         <div class="trophy-icon ${trophies[index].class}">${trophies[index].icon}</div>
+                        <div class="trophy-title ${trophies[index].class}">${trophies[index].title}</div>
                         <div class="trophy-rank">第${index + 1}名</div>
                         <div class="trophy-username">${user.username}</div>
                         <div class="trophy-points">${user.points} 积分</div>
@@ -401,10 +582,16 @@
             });
         }
         
+        // 检测前三名是否有变化
+        function checkTopThreeChange(user, index) {
+            if (!previousTopThree[index]) return true;
+            const previousUser = previousTopThree[index];
+            return previousUser.username !== user.username || previousUser.points !== user.points;
+        }
+        
         // 渲染排行榜表格
         function renderRankingTable(ranking, currentUser) {
             const tbody = document.getElementById('rankingBody');
-            tbody.innerHTML = '';
             
             if (ranking.length === 0) {
                 tbody.innerHTML = `
@@ -419,12 +606,21 @@
                 return;
             }
             
+            // 清空容器
+            tbody.innerHTML = '';
+            
             ranking.forEach((user, index) => {
                 const row = document.createElement('tr');
                 
                 // 检查是否是当前登录用户
                 if (currentUser && user.username === currentUser.username) {
                     row.className = 'current-user';
+                }
+                
+                // 检测是否有变化
+                const hasChanged = checkRankingChange(user, index);
+                if (hasChanged) {
+                    row.classList.add('updated');
                 }
                 
                 // 排名样式
@@ -435,6 +631,10 @@
                 
                 // 用户头像首字母
                 const avatarText = user.username.charAt(0).toUpperCase();
+                
+                // 检查积分是否增加
+                const pointsIncreased = checkPointsIncreased(user);
+                const pointsClass = pointsIncreased ? 'ranking-points increased' : 'ranking-points';
                 
                 row.innerHTML = `
                     <td>
@@ -449,12 +649,25 @@
                             </div>
                         </div>
                     </td>
-                    <td class="user-points">${user.points}</td>
+                    <td class="${pointsClass}">${user.points}</td>
                     <td class="user-submissions">${user.submissions || 0}</td>
                 `;
                 
                 tbody.appendChild(row);
             });
+        }
+        
+        // 检测排行榜项是否有变化
+        function checkRankingChange(user, index) {
+            if (!previousRanking[index]) return true;
+            const previousUser = previousRanking[index];
+            return previousUser.username !== user.username || previousUser.points !== user.points;
+        }
+        
+        // 检测积分是否增加
+        function checkPointsIncreased(user) {
+            const previousUser = previousRanking.find(u => u.username === user.username);
+            return previousUser && user.points > previousUser.points;
         }
         
         // 格式化最后登录时间
@@ -472,10 +685,49 @@
             else return date.toLocaleDateString('zh-CN');
         }
         
+        // 更新最后更新时间
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            if (lastUpdatedElement) {
+                lastUpdatedElement.textContent = `最后更新: ${timeString}`;
+            }
+        }
+        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 确保用户积分已初始化
+            const currentUser = UserManager.getCurrentUser();
+            if (currentUser) {
+                PointsManager.initUserPoints(currentUser.username);
+            }
+            
+            // 初始加载
             loadRanking();
-            initAllAnimations();
+            
+            // 绑定标签页切换事件
+            const rankingTabs = document.querySelectorAll('.ranking-tab');
+            rankingTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // 移除所有标签页的活跃状态
+                    rankingTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的活跃状态
+                    this.classList.add('active');
+                    // 更新当前排行榜类型
+                    currentRankingType = this.getAttribute('data-type');
+                    // 重新加载排行榜数据
+                    loadRanking();
+                });
+            });
+            
+            // 定时刷新排行榜数据（每5秒，更频繁的实时更新）
+            setInterval(loadRanking, 5000);
         });
     </script>
 </body>

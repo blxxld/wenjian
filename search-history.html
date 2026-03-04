@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索历史 - 问茧</title>
+    <meta name="description" content="问茧搜索历史页面，查看和管理您的搜索记录">
+    <meta name="keywords" content="搜索历史,搜索记录,关键词检索,问茧">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .search-history-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+        }
+        
+        .search-history-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .search-history-header h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .search-history-header p {
+            font-size: 1.1rem;
+            color: var(--gray-color);
+        }
+        
+        .search-history-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .search-history-actions h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .search-history-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-color);
+            color: white;
+        }
+        
+        .search-history-list {
+            margin-bottom: 2rem;
+        }
+        
+        .search-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light-bg);
+        }
+        
+        .search-history-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .search-history-item-content {
+            flex: 1;
+        }
+        
+        .search-history-term {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .search-history-time {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .search-history-actions-item {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .search-history-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: var(--gray-color);
+        }
+        
+        .search-history-btn:hover {
+            background: var(--light-gray);
+            color: var(--primary-color);
+        }
+        
+        .empty-history {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-history i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+        
+        .empty-history h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .empty-history p {
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .search-history-container {
+                padding: 2rem;
+            }
+            
+            .search-history-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .search-history-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-history-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-history-actions-item {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">搜索历史</h1>
+            <p class="page-subtitle">查看和管理您的搜索记录，快速找回之前的搜索内容</p>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <section class="section">
+            <div class="search-history-container animate-on-scroll">
+                <div class="search-history-header">
+                    <h1><i class="fas fa-history"></i> 搜索历史</h1>
+                    <p>管理您的搜索记录，快速访问之前的搜索内容</p>
+                </div>
+
+                <div class="search-history-actions">
+                    <h2>搜索记录</h2>
+                    <div class="search-history-buttons">
+                        <button class="btn btn-secondary" id="clear-history">
+                            <i class="fas fa-trash"></i> 清空历史
+                        </button>
+                        <button class="btn btn-primary" id="back-to-search">
+                            <i class="fas fa-search"></i> 返回搜索
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-history-list" id="search-history-list">
+                    <!-- 动态生成搜索历史记录 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=learning"><i class="fas fa-graduation-cap"></i> 学习资源</a></li>
+                    <li><a href="resources.html?category=internship"><i class="fas fa-briefcase"></i> 实习就业</a></li>
+                    <li><a href="resources.html?category=competition"><i class="fas fa-trophy"></i> 竞赛资讯</a></li>
+                    <li><a href="resources.html?category=tools"><i class="fas fa-tools"></i> 实用工具</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        // 搜索历史管理
+        const SearchHistoryManager = {
+            // 获取搜索历史（包含时间戳）
+            getSearchHistory() {
+                const history = localStorage.getItem('searchHistory');
+                if (history) {
+                    try {
+                        const parsedHistory = JSON.parse(history);
+                        // 确保返回的是数组
+                        return Array.isArray(parsedHistory) ? parsedHistory : [];
+                    } catch (error) {
+                        console.error('解析搜索历史失败:', error);
+                        return [];
+                    }
+                }
+                return [];
+            },
+            
+            // 获取带时间戳的搜索历史
+            getSearchHistoryWithTimestamps() {
+                const history = localStorage.getItem('searchHistoryWithTimestamps');
+                if (history) {
+                    try {
+                        const parsedHistory = JSON.parse(history);
+                        return Array.isArray(parsedHistory) ? parsedHistory : [];
+                    } catch (error) {
+                        console.error('解析搜索历史失败:', error);
+                        return [];
+                    }
+                }
+                return [];
+            },
+            
+            // 保存搜索历史（带时间戳）
+            saveSearchHistoryWithTimestamps(history) {
+                localStorage.setItem('searchHistoryWithTimestamps', JSON.stringify(history));
+            },
+            
+            // 添加搜索记录
+            addSearchTerm(term) {
+                if (!term || term.trim() === '') return;
+                
+                // 获取现有历史
+                let history = this.getSearchHistoryWithTimestamps();
+                
+                // 移除重复项
+                history = history.filter(item => item.term !== term);
+                
+                // 添加新记录
+                history.unshift({
+                    term: term,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // 限制历史记录数量
+                history = history.slice(0, 20);
+                
+                // 保存历史
+                this.saveSearchHistoryWithTimestamps(history);
+                
+                // 同时更新旧格式的历史（保持兼容性）
+                const simpleHistory = history.map(item => item.term);
+                localStorage.setItem('searchHistory', JSON.stringify(simpleHistory));
+            },
+            
+            // 删除单个搜索记录
+            removeSearchTerm(term) {
+                let history = this.getSearchHistoryWithTimestamps();
+                history = history.filter(item => item.term !== term);
+                this.saveSearchHistoryWithTimestamps(history);
+                
+                // 同时更新旧格式的历史
+                const simpleHistory = history.map(item => item.term);
+                localStorage.setItem('searchHistory', JSON.stringify(simpleHistory));
+            },
+            
+            // 清空搜索历史
+            clearSearchHistory() {
+                localStorage.removeItem('searchHistoryWithTimestamps');
+                localStorage.removeItem('searchHistory');
+            },
+            
+            // 格式化时间
+            formatTime(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor(diffMs / (1000 * 60));
+                
+                if (diffDays > 0) {
+                    return `${diffDays}天前`;
+                } else if (diffHours > 0) {
+                    return `${diffHours}小时前`;
+                } else if (diffMinutes > 0) {
+                    return `${diffMinutes}分钟前`;
+                } else {
+                    return '刚刚';
+                }
+            },
+            
+            // 渲染搜索历史
+            renderSearchHistory() {
+                const container = document.getElementById('search-history-list');
+                const history = this.getSearchHistoryWithTimestamps();
+                
+                if (history.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-history">
+                            <i class="fas fa-history"></i>
+                            <h3>暂无搜索历史</h3>
+                            <p>您还没有搜索记录，开始搜索资源吧！</p>
+                            <a href="resources.html" class="btn btn-primary">
+                                <i class="fas fa-search"></i> 开始搜索
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'search-history-item';
+                    historyItem.innerHTML = `
+                        <div class="search-history-item-content">
+                            <div class="search-history-term">
+                                <i class="fas fa-search"></i> ${item.term}
+                            </div>
+                            <div class="search-history-time">
+                                ${this.formatTime(item.timestamp)}
+                            </div>
+                        </div>
+                        <div class="search-history-actions-item">
+                            <button class="search-history-btn" onclick="SearchHistoryManager.research('${item.term}')">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                            <button class="search-history-btn" onclick="SearchHistoryManager.removeSearchTerm('${item.term}'); SearchHistoryManager.renderSearchHistory();">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(historyItem);
+                });
+            },
+            
+            // 重新搜索
+            research(term) {
+                window.location.href = `resources.html?search=${encodeURIComponent(term)}`;
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 更新用户菜单
+            UserManager.updateUserMenu();
+            
+            // 渲染搜索历史
+            SearchHistoryManager.renderSearchHistory();
+            
+            // 绑定清空历史按钮
+            document.getElementById('clear-history').addEventListener('click', function() {
+                if (confirm('确定要清空所有搜索历史吗？')) {
+                    SearchHistoryManager.clearSearchHistory();
+                    SearchHistoryManager.renderSearchHistory();
+                }
+            });
+            
+            // 绑定返回搜索按钮
+            document.getElementById('back-to-search').addEventListener('click', function() {
+                window.location.href = 'resources.html';
+            });
+        });
+        
+        // 扩展SearchSystem，添加带时间戳的搜索历史
+        if (typeof SearchSystem !== 'undefined') {
+            const originalAddToSearchHistory = SearchSystem.addToSearchHistory;
+            SearchSystem.addToSearchHistory = function(searchTerm) {
+                // 调用原始方法
+                originalAddToSearchHistory.call(this, searchTerm);
+                // 添加带时间戳的历史
+                if (typeof SearchHistoryManager !== 'undefined') {
+                    SearchHistoryManager.addSearchTerm(searchTerm);
+                }
+            };
+        }
+    </script>
+</body>
+</html>

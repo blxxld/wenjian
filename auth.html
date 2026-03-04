@@ -299,14 +299,7 @@
                     <i class="fas fa-sign-in-alt"></i> 登录
                 </button>
                 
-                <div class="social-login">
-                    <p>或使用以下方式登录</p>
-                    <div class="social-buttons">
-                        <div class="social-btn facebook"><i class="fab fa-facebook-f"></i></div>
-                        <div class="social-btn google"><i class="fab fa-google"></i></div>
-                        <div class="social-btn github"><i class="fab fa-github"></i></div>
-                    </div>
-                </div>
+
             </form>
             
             <!-- 注册表单 -->
@@ -460,6 +453,11 @@
                         // 登录成功
                         localStorage.setItem('currentUser', JSON.stringify(user));
                         
+                        // 初始化用户积分
+                        PointsManager.initUserPoints(user.username);
+                        // 领取每日登录积分
+                        PointsManager.claimDailyLoginPoints(user.username);
+                        
                         // 显示成功消息
                         alert('登录成功！');
                         
@@ -504,6 +502,11 @@
                         users.push(newUser);
                         localStorage.setItem('users', JSON.stringify(users));
                         localStorage.setItem('currentUser', JSON.stringify(newUser));
+                        
+                        // 初始化用户积分
+                        PointsManager.initUserPoints(newUser.username);
+                        // 领取每日登录积分
+                        PointsManager.claimDailyLoginPoints(newUser.username);
                         
                         // 显示成功消息
                         alert('注册成功！');

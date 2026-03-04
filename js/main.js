@@ -1,3 +1,106 @@
+// ==================== 工具函数 ====================
+
+// 本地存储工具
+const StorageUtil = {
+    get(key, defaultValue = null) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+        } catch (error) {
+            console.error('读取本地存储失败:', error);
+            return defaultValue;
+        }
+    },
+    
+    set(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (error) {
+            console.error('写入本地存储失败:', error);
+            return false;
+        }
+    },
+    
+    remove(key) {
+        try {
+            localStorage.removeItem(key);
+            return true;
+        } catch (error) {
+            console.error('删除本地存储失败:', error);
+            return false;
+        }
+    }
+};
+
+// DOM工具
+const DOMUtil = {
+    on(element, event, callback) {
+        if (element) {
+            element.addEventListener(event, callback);
+        }
+    },
+    
+    off(element, event, callback) {
+        if (element) {
+            element.removeEventListener(event, callback);
+        }
+    },
+    
+    $(selector, context = document) {
+        return context.querySelector(selector);
+    },
+    
+    $$(selector, context = document) {
+        return Array.from(context.querySelectorAll(selector));
+    },
+    
+    createElement(tag, options = {}) {
+        const element = document.createElement(tag);
+        
+        if (options.className) {
+            element.className = options.className;
+        }
+        
+        if (options.innerHTML) {
+            element.innerHTML = options.innerHTML;
+        }
+        
+        if (options.attributes) {
+            Object.entries(options.attributes).forEach(([key, value]) => {
+                element.setAttribute(key, value);
+            });
+        }
+        
+        return element;
+    }
+};
+
+// 防抖函数
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// 节流函数
+function throttle(func, limit) {
+    let inThrottle;
+    return function executedFunction(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
 // ==================== 模块化JavaScript代码 ====================
 
 // 资源数据管理模块
@@ -30,12 +133,32 @@ const ResourceManager = {
 
 // 分类和年级映射
 const Constants = {
+    // 主分类
     categoryMap: {
         'all': '全部',
-        'learning': '学习资源',
-        'internship': '实习就业',
-        'competition': '竞赛资讯',
-        'tools': '实用工具'
+        'website': '网站类',
+        'information': '信息类'
+    },
+    
+    // 子分类
+    subCategoryMap: {
+        'website': {
+            'learning': '学习网站',
+            'career': '就业网站',
+            'competition': '竞赛网站',
+            'tool': '工具网站',
+            'design': '设计网站',
+            'academic': '学术网站',
+            'other': '其他网站'
+        },
+        'information': {
+            'news': '资讯信息',
+            'resource': '资源信息',
+            'competition': '竞赛信息',
+            'learning': '学习信息',
+            'career': '就业信息',
+            'other': '其他信息'
+        }
     },
     
     gradeMap: {
@@ -296,10 +419,8 @@ const FilterSystem = {
     
     updateCategoryCounts() {
         const categories = {
-            'learning': 0,
-            'internship': 0,
-            'competition': 0,
-            'tools': 0
+            'website': 0,
+            'information': 0
         };
         
         // 统计每个分类的资源数量
@@ -413,7 +534,7 @@ const FilterSystem = {
         
         // 读取分类
         const category = urlParams.get('category');
-        if (category && ['learning', 'internship', 'competition', 'tools'].includes(category)) {
+        if (category && ['website', 'information'].includes(category)) {
             this.setCategoryFilter(category);
         }
         
@@ -554,10 +675,8 @@ const ResourceDisplay = {
         // 为分类添加图标
         const getCategoryIcon = (category) => {
             const icons = {
-                'learning': 'fas fa-graduation-cap',
-                'internship': 'fas fa-briefcase',
-                'competition': 'fas fa-trophy',
-                'tools': 'fas fa-tools'
+                'website': 'fas fa-globe',
+                'information': 'fas fa-newspaper'
             };
             return icons[category] || 'fas fa-book';
         };
@@ -625,8 +744,7 @@ const ResourceDisplay = {
 // 收藏管理模块
 const FavoriteManager = {
     getFavorites() {
-        const favorites = localStorage.getItem('favorites');
-        return favorites ? JSON.parse(favorites) : [];
+        return StorageUtil.get('favorites', []);
     },
     
     isResourceFavorited(resourceId) {
@@ -647,7 +765,7 @@ const FavoriteManager = {
             favorites.push(resourceIdStr);
         }
         
-        localStorage.setItem('favorites', JSON.stringify(favorites));
+        StorageUtil.set('favorites', favorites);
     }
 };
 
@@ -683,18 +801,18 @@ const AnimationManager = {
         }, observerOptions);
 
         // 观察所有需要滚动动画的元素
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        DOMUtil.$$('.animate-on-scroll').forEach(el => {
             observer.observe(el);
         });
     },
     
     initNavbarScroll() {
         let lastScrollTop = 0;
-        const navbar = document.querySelector('.navbar');
+        const navbar = DOMUtil.$('.navbar');
         
         if (!navbar) return;
         
-        window.addEventListener('scroll', function() {
+        DOMUtil.on(window, 'scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
             // 添加滚动类
@@ -723,46 +841,46 @@ const AnimationManager = {
         document.body.classList.add('page-load-animation');
         
         // 为特定元素添加延迟动画
-        const heroElements = document.querySelectorAll('.hero-content > *');
+        const heroElements = DOMUtil.$$('.hero-content > *');
         heroElements.forEach((el, index) => {
             el.style.animationDelay = `${index * 0.2}s`;
         });
         
         // 为分类卡片添加延迟动画
-        const categoryCards = document.querySelectorAll('.category-card');
+        const categoryCards = DOMUtil.$$('.category-card');
         categoryCards.forEach((card, index) => {
             card.style.animationDelay = `${0.2 + index * 0.1}s`;
         });
         
         // 为资源卡片添加延迟动画
-        const resourceCards = document.querySelectorAll('.resource-card');
+        const resourceCards = DOMUtil.$$('.resource-card');
         resourceCards.forEach((card, index) => {
             card.style.animationDelay = `${0.4 + index * 0.1}s`;
         });
     },
     
     initButtonEffects() {
-        document.querySelectorAll('.btn').forEach(button => {
+        DOMUtil.$$('.btn').forEach(button => {
             // 避免重复绑定
             if (button.hasAttribute('data-ripple-bound')) return;
             
             button.setAttribute('data-ripple-bound', 'true');
             
             // 鼠标悬停效果
-            button.addEventListener('mouseenter', function() {
+            DOMUtil.on(button, 'mouseenter', function() {
                 this.style.transform = 'translateY(-2px)';
                 this.style.boxShadow = '0 8px 25px rgba(67, 97, 238, 0.3)';
             });
             
-            button.addEventListener('mouseleave', function() {
+            DOMUtil.on(button, 'mouseleave', function() {
                 this.style.transform = 'translateY(0)';
                 this.style.boxShadow = 'var(--shadow-md)';
             });
             
             // 点击涟漪效果
-            button.addEventListener('click', function(e) {
+            DOMUtil.on(button, 'click', function(e) {
                 // 添加点击涟漪效果
-                const ripple = document.createElement('span');
+                const ripple = DOMUtil.createElement('span');
                 const rect = this.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
@@ -793,30 +911,31 @@ const AnimationManager = {
         });
         
         // 添加涟漪动画样式（如果尚未添加）
-        if (!document.getElementById('ripple-animation-style')) {
-            const rippleStyle = document.createElement('style');
-            rippleStyle.id = 'ripple-animation-style';
-            rippleStyle.textContent = `
-                @keyframes ripple-animation {
-                    to {
-                        transform: scale(4);
-                        opacity: 0;
+        if (!DOMUtil.$('#ripple-animation-style')) {
+            const rippleStyle = DOMUtil.createElement('style', {
+                id: 'ripple-animation-style',
+                innerHTML: `
+                    @keyframes ripple-animation {
+                        to {
+                            transform: scale(4);
+                            opacity: 0;
+                        }
                     }
-                }
-            `;
+                `
+            });
             document.head.appendChild(rippleStyle);
         }
     },
     
     initCardHoverEffects() {
         // 为资源卡片添加悬停效果
-        document.querySelectorAll('.resource-card, .category-card, .feature, .team-member').forEach(card => {
-            card.addEventListener('mouseenter', function() {
+        DOMUtil.$$('.resource-card, .category-card, .feature, .team-member').forEach(card => {
+            DOMUtil.on(card, 'mouseenter', function() {
                 this.style.transform = 'translateY(-8px) scale(1.02)';
                 this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.1)';
             });
             
-            card.addEventListener('mouseleave', function() {
+            DOMUtil.on(card, 'mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
                 this.style.boxShadow = 'var(--shadow-lg)';
             });
@@ -824,12 +943,13 @@ const AnimationManager = {
     },
     
     initScrollToTop() {
-        const scrollToTopBtn = document.createElement('button');
-        scrollToTopBtn.className = 'scroll-to-top';
-        scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        const scrollToTopBtn = DOMUtil.createElement('button', {
+            className: 'scroll-to-top',
+            innerHTML: '<i class="fas fa-arrow-up"></i>'
+        });
         document.body.appendChild(scrollToTopBtn);
         
-        window.addEventListener('scroll', function() {
+        DOMUtil.on(window, 'scroll', function() {
             if (window.pageYOffset > 300) {
                 scrollToTopBtn.classList.add('visible');
             } else {
@@ -838,25 +958,26 @@ const AnimationManager = {
         });
         
         // 添加悬停效果
-        scrollToTopBtn.addEventListener('mouseenter', function() {
+        DOMUtil.on(scrollToTopBtn, 'mouseenter', function() {
             this.style.transform = 'translateY(-5px) scale(1.1)';
         });
         
-        scrollToTopBtn.addEventListener('mouseleave', function() {
+        DOMUtil.on(scrollToTopBtn, 'mouseleave', function() {
             this.style.transform = 'translateY(0) scale(1)';
         });
         
-        scrollToTopBtn.addEventListener('click', function() {
+        DOMUtil.on(scrollToTopBtn, 'click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     },
     
     initProgressIndicator() {
-        const progressBar = document.createElement('div');
-        progressBar.className = 'progress-bar';
+        const progressBar = DOMUtil.createElement('div', {
+            className: 'progress-bar'
+        });
         document.body.appendChild(progressBar);
         
-        window.addEventListener('scroll', function() {
+        DOMUtil.on(window, 'scroll', function() {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
@@ -865,7 +986,7 @@ const AnimationManager = {
     },
     
     initStaggeredAnimations() {
-        const cards = document.querySelectorAll('.resource-card, .category-card, .feature, .team-member');
+        const cards = DOMUtil.$$('.resource-card, .category-card, .feature, .team-member');
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -889,13 +1010,13 @@ const AnimationManager = {
     
     initFormAnimations() {
         // 为表单输入框添加焦点效果
-        document.querySelectorAll('input, textarea, select').forEach(input => {
-            input.addEventListener('focus', function() {
+        DOMUtil.$$('input, textarea, select').forEach(input => {
+            DOMUtil.on(input, 'focus', function() {
                 this.style.transform = 'translateY(-2px)';
                 this.style.boxShadow = '0 4px 15px rgba(67, 97, 238, 0.2)';
             });
             
-            input.addEventListener('blur', function() {
+            DOMUtil.on(input, 'blur', function() {
                 this.style.transform = 'translateY(0)';
                 this.style.boxShadow = 'none';
             });
@@ -904,8 +1025,8 @@ const AnimationManager = {
     
     initFilterAnimations() {
         // 为筛选选项添加点击效果
-        document.querySelectorAll('.filter-item').forEach(item => {
-            item.addEventListener('click', function() {
+        DOMUtil.$$('.filter-item').forEach(item => {
+            DOMUtil.on(item, 'click', function() {
                 // 添加点击动画
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
@@ -917,9 +1038,9 @@ const AnimationManager = {
     
     initModalAnimations() {
         // 为模态框添加动画效果
-        const modals = document.querySelectorAll('.modal');
+        const modals = DOMUtil.$$('.modal');
         modals.forEach(modal => {
-            modal.addEventListener('show.bs.modal', function() {
+            DOMUtil.on(modal, 'show.bs.modal', function() {
                 this.style.opacity = '0';
                 this.style.transform = 'scale(0.9)';
                 setTimeout(() => {
@@ -928,7 +1049,7 @@ const AnimationManager = {
                 }, 10);
             });
             
-            modal.addEventListener('hide.bs.modal', function() {
+            DOMUtil.on(modal, 'hide.bs.modal', function() {
                 this.style.opacity = '0';
                 this.style.transform = 'scale(0.9)';
             });
@@ -947,34 +1068,39 @@ const SearchSystem = {
     },
     
     setupSearchInput() {
-        const searchInput = document.getElementById('search-input');
+        const searchInput = DOMUtil.$('#search-input');
         if (!searchInput) return;
         
-        // 搜索输入事件
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.trim();
+        // 搜索防抖
+        const debouncedSearch = debounce((searchTerm) => {
             if (searchTerm.length > 1) {
                 this.showSearchSuggestions(searchTerm);
             } else {
                 this.hideSearchSuggestions();
             }
+        }, 300);
+        
+        // 搜索输入事件
+        DOMUtil.on(searchInput, 'input', (e) => {
+            const searchTerm = e.target.value.trim();
+            debouncedSearch(searchTerm);
         });
         
         // 搜索提交事件
-        const searchBtn = document.getElementById('search-btn');
+        const searchBtn = DOMUtil.$('#search-btn');
         if (searchBtn) {
-            searchBtn.addEventListener('click', () => this.performSearch());
+            DOMUtil.on(searchBtn, 'click', () => this.performSearch());
         }
         
         // 回车键搜索
-        searchInput.addEventListener('keypress', (e) => {
+        DOMUtil.on(searchInput, 'keypress', (e) => {
             if (e.key === 'Enter') {
                 this.performSearch();
             }
         });
         
         // 点击其他区域隐藏搜索建议
-        document.addEventListener('click', (e) => {
+        DOMUtil.on(document, 'click', (e) => {
             if (!searchInput.contains(e.target) && !e.target.closest('.search-suggestions')) {
                 this.hideSearchSuggestions();
             }
@@ -982,7 +1108,7 @@ const SearchSystem = {
     },
     
     performSearch() {
-        const searchInput = document.getElementById('search-input');
+        const searchInput = DOMUtil.$('#search-input');
         const searchTerm = searchInput ? searchInput.value.trim() : '';
         
         if (searchTerm) {
@@ -993,7 +1119,7 @@ const SearchSystem = {
         FilterSystem.currentFilters.searchTerm = searchTerm;
         
         // 如果在资源页面，直接应用筛选
-        if (document.getElementById('all-resources')) {
+        if (DOMUtil.$('#all-resources')) {
             FilterSystem.applyFilters();
         } else {
             // 如果不在资源页面，跳转到资源页面并传递搜索参数
@@ -1005,32 +1131,60 @@ const SearchSystem = {
     },
     
     showSearchSuggestions(searchTerm) {
-        const searchInput = document.getElementById('search-input');
+        const searchInput = DOMUtil.$('#search-input');
         if (!searchInput) return;
         
         // 生成搜索建议
         this.searchSuggestions = this.generateSearchSuggestions(searchTerm);
         
         // 创建搜索建议容器
-        let suggestionsContainer = document.querySelector('.search-suggestions');
+        let suggestionsContainer = DOMUtil.$('.search-suggestions');
         if (!suggestionsContainer) {
-            suggestionsContainer = document.createElement('div');
-            suggestionsContainer.className = 'search-suggestions';
+            suggestionsContainer = DOMUtil.createElement('div', {
+                className: 'search-suggestions'
+            });
             searchInput.parentNode.appendChild(suggestionsContainer);
         }
         
         // 渲染搜索建议
         if (this.searchSuggestions.length > 0) {
-            suggestionsContainer.innerHTML = this.searchSuggestions.map(suggestion => `
-                <div class="search-suggestion-item" data-term="${suggestion}">
-                    <i class="fas fa-search"></i>
-                    <span>${suggestion}</span>
-                </div>
-            `).join('');
+            suggestionsContainer.innerHTML = this.searchSuggestions.map(suggestion => {
+                // 根据建议类型选择图标
+                let icon = 'fas fa-search';
+                let typeClass = 'search-suggestion-type-' + suggestion.type;
+                
+                switch (suggestion.type) {
+                    case 'history':
+                        icon = 'fas fa-history';
+                        break;
+                    case 'tag':
+                        icon = 'fas fa-tag';
+                        break;
+                    case 'title':
+                        icon = 'fas fa-file-alt';
+                        break;
+                    case 'description':
+                        icon = 'fas fa-align-left';
+                        break;
+                }
+                
+                // 高亮搜索词
+                const highlightedText = suggestion.text.replace(
+                    new RegExp(`(${searchTerm})`, 'gi'),
+                    '<span class="search-highlight">$1</span>'
+                );
+                
+                return `
+                    <div class="search-suggestion-item ${typeClass}" data-term="${suggestion.text}">
+                        <i class="${icon}"></i>
+                        <span>${highlightedText}</span>
+                    </div>
+                `;
+            }).join('');
             
             // 绑定点击事件
-            suggestionsContainer.querySelectorAll('.search-suggestion-item').forEach(item => {
-                item.addEventListener('click', () => {
+            DOMUtil.$$('.search-suggestion-item', suggestionsContainer).forEach(item => {
+                DOMUtil.on(item, 'click', () => {
                     const term = item.getAttribute('data-term');
                     searchInput.value = term;
                     this.performSearch();
@@ -1044,7 +1198,7 @@ const SearchSystem = {
     },
     
     hideSearchSuggestions() {
-        const suggestionsContainer = document.querySelector('.search-suggestions');
+        const suggestionsContainer = DOMUtil.$('.search-suggestions');
         if (suggestionsContainer) {
             suggestionsContainer.classList.remove('active');
         }
@@ -1052,44 +1206,93 @@ const SearchSystem = {
     
     generateSearchSuggestions(searchTerm) {
         const resources = ResourceManager.getResources();
-        const suggestions = new Set();
+        const suggestions = [];
+        const seenSuggestions = new Set();
         
         // 从资源标题、描述和标签中提取建议
         resources.forEach(resource => {
+            // 标题建议
             if (resource.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-                suggestions.add(resource.title);
+                const titleSuggestion = {
+                    text: resource.title,
+                    type: 'title',
+                    resourceId: resource.id,
+                    score: 10 // 标题匹配得分最高
+                };
+                if (!seenSuggestions.has(titleSuggestion.text)) {
+                    suggestions.push(titleSuggestion);
+                    seenSuggestions.add(titleSuggestion.text);
+                }
             }
+            
+            // 标签建议
+            resource.tags.forEach(tag => {
+                const tagText = Array.isArray(tag) ? tag.join('') : tag;
+                if (tagText.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    const tagSuggestion = {
+                        text: tagText,
+                        type: 'tag',
+                        score: 8 // 标签匹配得分较高
+                    };
+                    if (!seenSuggestions.has(tagSuggestion.text)) {
+                        suggestions.push(tagSuggestion);
+                        seenSuggestions.add(tagSuggestion.text);
+                    }
+                }
+            });
+            
+            // 描述建议
             if (resource.description.toLowerCase().includes(searchTerm.toLowerCase())) {
                 // 提取描述中的相关短语
                 const descLower = resource.description.toLowerCase();
                 const startIndex = descLower.indexOf(searchTerm.toLowerCase());
                 if (startIndex !== -1) {
                     const endIndex = descLower.indexOf(' ', startIndex + searchTerm.length + 20);
-                    const suggestion = resource.description.substring(
+                    const suggestionText = resource.description.substring(
                         Math.max(0, startIndex - 10),
                         endIndex !== -1 ? endIndex : resource.description.length
                     ).trim();
-                    if (suggestion.length > 10) {
-                        suggestions.add(suggestion);
+                    if (suggestionText.length > 10) {
+                        const descSuggestion = {
+                            text: suggestionText,
+                            type: 'description',
+                            resourceId: resource.id,
+                            score: 6 // 描述匹配得分较低
+                        };
+                        if (!seenSuggestions.has(descSuggestion.text)) {
+                            suggestions.push(descSuggestion);
+                            seenSuggestions.add(descSuggestion.text);
+                        }
                     }
                 }
             }
-            resource.tags.forEach(tag => {
-                const tagText = Array.isArray(tag) ? tag.join('') : tag;
-                if (tagText.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    suggestions.add(tagText);
-                }
-            });
         });
         
         // 添加搜索历史中的相关项
         this.searchHistory.forEach(historyItem => {
             if (historyItem.toLowerCase().includes(searchTerm.toLowerCase())) {
-                suggestions.add(historyItem);
+                const historySuggestion = {
+                    text: historyItem,
+                    type: 'history',
+                    score: 9 // 历史记录得分较高
+                };
+                if (!seenSuggestions.has(historySuggestion.text)) {
+                    suggestions.push(historySuggestion);
+                    seenSuggestions.add(historySuggestion.text);
+                }
             }
         });
         
-        return Array.from(suggestions).slice(0, 5); // 最多显示5个建议
+        // 按得分排序，然后按字母顺序排序
+        suggestions.sort((a, b) => {
+            if (b.score !== a.score) {
+                return b.score - a.score;
+            }
+            return a.text.localeCompare(b.text);
+        });
+        
+        // 最多返回8个建议
+        return suggestions.slice(0, 8);
     },
     
     addToSearchHistory(searchTerm) {
@@ -1103,12 +1306,11 @@ const SearchSystem = {
         this.searchHistory = this.searchHistory.slice(0, 10);
         
         // 保存到本地存储
-        localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
+        StorageUtil.set('searchHistory', this.searchHistory);
     },
     
     loadSearchHistory() {
-        const savedHistory = localStorage.getItem('searchHistory');
-        this.searchHistory = savedHistory ? JSON.parse(savedHistory) : [];
+        this.searchHistory = StorageUtil.get('searchHistory', []);
     }
 };
 
@@ -1150,26 +1352,38 @@ const PointsManager = {
                 submissions: 0
             };
             this.saveUsersPoints(users);
+            console.log('初始化用户积分成功:', users[username]);
         }
         return users[username];
     },
     
     // 获取所有用户积分
     getUsersPoints() {
-        const usersJson = localStorage.getItem('usersPoints');
-        return usersJson ? JSON.parse(usersJson) : {};
+        return StorageUtil.get('usersPoints', {});
     },
     
     // 保存用户积分
     saveUsersPoints(users) {
-        localStorage.setItem('usersPoints', JSON.stringify(users));
+        StorageUtil.set('usersPoints', users);
     },
     
     // 增加用户积分
     addPoints(username, points, reason) {
-        const users = this.getUsersPoints();
+        let users = this.getUsersPoints();
         if (!users[username]) {
             this.initUserPoints(username);
+            // 重新获取更新后的用户数据
+            users = this.getUsersPoints();
+        }
+        
+        // 确保users[username]存在
+        if (!users[username]) {
+            users[username] = {
+                points: 0,
+                username: username,
+                lastLogin: null,
+                submissions: 0
+            };
         }
         
         users[username].points += points;
@@ -1180,6 +1394,7 @@ const PointsManager = {
         }
         
         this.saveUsersPoints(users);
+        console.log('添加积分成功:', username, points, '积分', '原因:', reason, '当前积分:', users[username].points);
         return users[username];
     },
     
@@ -1190,9 +1405,33 @@ const PointsManager = {
     },
     
     // 获取积分排行榜
-    getRanking(limit = 10) {
+    getRanking(limit = 10, type = 'total') {
         const users = this.getUsersPoints();
-        return Object.values(users)
+        let filteredUsers = Object.values(users);
+        
+        // 根据类型筛选时间范围
+        if (type !== 'total') {
+            const now = new Date();
+            let cutoffDate;
+            
+            if (type === 'daily') {
+                // 24小时内
+                cutoffDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            } else if (type === 'weekly') {
+                // 7天内
+                cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            }
+            
+            // 筛选在时间范围内有活动的用户
+            filteredUsers = filteredUsers.filter(user => {
+                if (!user.lastLogin) return false;
+                const lastLoginDate = new Date(user.lastLogin);
+                return lastLoginDate >= cutoffDate;
+            });
+        }
+        
+        // 排序并返回前N名
+        return filteredUsers
             .sort((a, b) => b.points - a.points)
             .slice(0, limit);
     },
@@ -1205,8 +1444,11 @@ const PointsManager = {
         
         // 检查是否已经领取过今日积分
         if (!lastLogin || lastLogin.toDateString() !== today.toDateString()) {
-            return this.addPoints(username, this.pointConfig.dailyLogin, 'dailyLogin');
+            const updatedUser = this.addPoints(username, this.pointConfig.dailyLogin, 'dailyLogin');
+            console.log('领取每日登录积分成功:', updatedUser);
+            return updatedUser;
         }
+        console.log('今日已领取过积分:', user);
         return user;
     }
 };
@@ -1215,8 +1457,7 @@ const PointsManager = {
 const UserManager = {
     // 获取当前用户
     getCurrentUser() {
-        const userJson = localStorage.getItem('currentUser');
-        return userJson ? JSON.parse(userJson) : null;
+        return StorageUtil.get('currentUser', null);
     },
     
     // 检查用户是否已登录
@@ -1224,23 +1465,30 @@ const UserManager = {
         return this.getCurrentUser() !== null;
     },
     
+    // 检查用户是否为管理员
+    isAdmin() {
+        const user = this.getCurrentUser();
+        return user && user.role === 'admin';
+    },
+    
     // 登出用户
     logout() {
-        localStorage.removeItem('currentUser');
+        StorageUtil.remove('currentUser');
         this.updateUserMenu();
         window.location.href = 'index.html';
     },
     
     // 更新用户菜单
     updateUserMenu() {
-        const userMenu = document.getElementById('user-menu');
+        const userMenu = DOMUtil.$('#user-menu');
         if (!userMenu) return;
         
         if (this.isLoggedIn()) {
             const user = this.getCurrentUser();
             const userPoints = PointsManager.getUserPoints(user.username);
             
-            userMenu.innerHTML = `
+            // 构建菜单内容
+            let menuContent = `
                 <div class="user-dropdown">
                     <a href="#" class="user-profile">
                         <i class="fas fa-user-circle"></i> ${user.username}
@@ -1252,33 +1500,51 @@ const UserManager = {
                         <a href="ranking.html" class="dropdown-item"><i class="fas fa-trophy"></i> 积分排行榜</a>
                         <a href="#" class="dropdown-item"><i class="fas fa-heart"></i> 我的收藏</a>
                         <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> 设置</a>
+            `;
+            
+            // 如果是管理员，添加管理员菜单
+            if (this.isAdmin()) {
+                menuContent += `
+                        <div class="dropdown-divider"></div>
+                        <a href="admin.html" class="dropdown-item"><i class="fas fa-shield-alt"></i> 管理后台</a>
+                `;
+            }
+            
+            menuContent += `
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item logout-btn"><i class="fas fa-sign-out-alt"></i> 登出</a>
                     </div>
                 </div>
             `;
             
+            userMenu.innerHTML = menuContent;
+            
             // 绑定登出按钮事件
-            userMenu.querySelector('.logout-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                this.logout();
-            });
+            const logoutBtn = userMenu.querySelector('.logout-btn');
+            if (logoutBtn) {
+                DOMUtil.on(logoutBtn, 'click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+            }
             
             // 绑定下拉菜单事件
             const userProfile = userMenu.querySelector('.user-profile');
             const dropdownMenu = userMenu.querySelector('.dropdown-menu');
             
-            userProfile.addEventListener('click', (e) => {
-                e.preventDefault();
-                dropdownMenu.classList.toggle('active');
-            });
-            
-            // 点击其他区域关闭下拉菜单
-            document.addEventListener('click', (e) => {
-                if (!userMenu.contains(e.target)) {
-                    dropdownMenu.classList.remove('active');
-                }
-            });
+            if (userProfile && dropdownMenu) {
+                DOMUtil.on(userProfile, 'click', (e) => {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('active');
+                });
+                
+                // 点击其他区域关闭下拉菜单
+                DOMUtil.on(document, 'click', (e) => {
+                    if (!userMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('active');
+                    }
+                });
+            }
         } else {
             userMenu.innerHTML = '<a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>';
         }
@@ -1288,11 +1554,11 @@ const UserManager = {
 // 页面初始化
 async function initPage() {
     // 移动端菜单切换
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
+    const navToggle = DOMUtil.$('.nav-toggle');
+    const navMenu = DOMUtil.$('.nav-menu');
     
     if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
+        DOMUtil.on(navToggle, 'click', function() {
             navMenu.classList.toggle('active');
         });
     }
@@ -1304,11 +1570,11 @@ async function initPage() {
     SearchSystem.init();
     
     // 键盘快捷键支持
-    document.addEventListener('keydown', function(e) {
+    DOMUtil.on(document, 'keydown', function(e) {
         // 按 Ctrl/Cmd + K 打开搜索
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            const searchBox = document.getElementById('search-input');
+            const searchBox = DOMUtil.$('#search-input');
             if (searchBox) {
                 searchBox.focus();
             }
@@ -1316,7 +1582,7 @@ async function initPage() {
         
         // 按 Escape 关闭搜索
         if (e.key === 'Escape') {
-            const searchBox = document.getElementById('search-input');
+            const searchBox = DOMUtil.$('#search-input');
             if (searchBox) {
                 searchBox.blur();
                 SearchSystem.hideSearchSuggestions();
@@ -1334,7 +1600,7 @@ async function initPage() {
     await ResourceManager.loadResources();
     
     // 显示热门资源（在首页）
-    const hotResourcesContainer = document.getElementById('hot-resources');
+    const hotResourcesContainer = DOMUtil.$('#hot-resources');
     if (hotResourcesContainer) {
         const hotResources = ResourceManager.getHotResources(6);
         ResourceDisplay.displayResources(hotResources, hotResourcesContainer);

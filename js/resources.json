@@ -2,7 +2,8 @@
     {
         "id": 1,
         "title": "清华大学公开课",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "清华大学推出的在线教育平台，提供丰富的免费公开课程",
         "url": "https://www.xuetangx.com",
         "rating": 5,
@@ -13,7 +14,8 @@
     {
         "id": 2,
         "title": "实习僧",
-        "category": "internship",
+        "category": "website",
+        "subCategory": "career",
         "description": "专注大学生实习的招聘平台，提供大量实习机会",
         "url": "https://www.shixiseng.com",
         "rating": 4,
@@ -24,7 +26,8 @@
     {
         "id": 3,
         "title": "菜鸟教程",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "编程入门学习网站，涵盖多种编程语言和技术",
         "url": "https://www.runoob.com",
         "rating": 5,
@@ -35,7 +38,8 @@
     {
         "id": 4,
         "title": "全国大学生竞赛信息网",
-        "category": "competition",
+        "category": "website",
+        "subCategory": "competition",
         "description": "官方竞赛信息发布平台，涵盖各类学科竞赛",
         "url": "http://www.chinasaikr.com",
         "rating": 4,
@@ -46,7 +50,8 @@
     {
         "id": 5,
         "title": "Canva可画",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "在线设计工具，适合制作海报、简历、PPT等",
         "url": "https://www.canva.cn",
         "rating": 5,
@@ -57,7 +62,8 @@
     {
         "id": 6,
         "title": "中国大学MOOC",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "国内优质的中文MOOC学习平台",
         "url": "https://www.icourse163.org",
         "rating": 5,
@@ -68,7 +74,8 @@
     {
         "id": 7,
         "title": "BOSS直聘",
-        "category": "internship",
+        "category": "website",
+        "subCategory": "career",
         "description": "互联网招聘平台，适合找实习和全职工作",
         "url": "https://www.zhipin.com",
         "rating": 4,
@@ -79,7 +86,8 @@
     {
         "id": 8,
         "title": "年会抽奖",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "适合公司年会和团建抽奖",
         "url": "https://vitozyf.github.io/lucky-draw/#/",
         "rating": 4,
@@ -90,7 +98,8 @@
     {
         "id": 9,
         "title": "Kaggle",
-        "category": "competition",
+        "category": "website",
+        "subCategory": "competition",
         "description": "全球数据科学竞赛平台，提供数据集和竞赛",
         "url": "https://www.kaggle.com",
         "rating": 5,
@@ -101,7 +110,8 @@
     {
         "id": 10,
         "title": "新概念英语（全四册）",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "英语句子听力&跟读，分阶练习",
         "url": "https://nce.ichochy.com/",
         "rating": 4,
@@ -112,7 +122,8 @@
     {
         "id": 11,
         "title": "日语学习：我的词",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "日语单词听读",
         "url": "https://wordlip.com/",
         "rating": 4,
@@ -123,7 +134,8 @@
     {
         "id": 12,
         "title": "趣记单词",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "快速查询，用有趣的方式记忆单词",
         "url": "https://qujidanci.xieyonglin.com/",
         "rating": 5,
@@ -134,7 +146,8 @@
     {
         "id": 13,
         "title": "西瓜英语 | 新概念英语学习",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "AI解答英语学习困境；内含英语词汇、句子、文章解析；提供免费额度。",
         "url": "https://learnenai.com/",
         "rating": 4,
@@ -145,7 +158,8 @@
     {
         "id": 14,
         "title": "Speaky",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "全球领先的免费语言交流平台，通过文字或语音与母语人士交流",
         "url": "https://www.speaky.com/",
         "rating": 5,
@@ -156,7 +170,8 @@
     {
         "id": 15,
         "title": "LanguageGuide-学习一门语言",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "通过交互式语音指南探索各语种词汇及日常用语，有趣生动",
         "url": "https://www.languageguide.org/cn/",
         "rating": 4,
@@ -167,7 +182,8 @@
     {
         "id": 16,
         "title": "AI专属德语家教",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "AI对话式德语家教，提供实时反馈和口语练习",
         "url": "https://learngerman.ai/zh-CN",
         "rating": 3,
@@ -178,7 +194,8 @@
     {
         "id": 17,
         "title": "巴别英语 | 看美剧学英语",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "告别死记硬背，看美剧学英语",
         "url": "https://www.babelabc.com/",
         "rating": 4,
@@ -189,7 +206,8 @@
     {
         "id": 18,
         "title": "且听书吟 - 诗与梦想的远方",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "包含学习方法、生活分享、心事随笔等各类高质内容",
         "url": "https://yufan.me/",
         "rating": 4,
@@ -201,6 +219,7 @@
         "id": 19,
         "title": "Loecsen - 轻松学语言",
         "category": "learning",
+        "subCategory": "language",
         "description": "50种语言的趣味学习",
         "url": "https://www.loecsen.com/zh",
         "rating": 5,
@@ -209,9 +228,10 @@
         "tags": ["外语学习", "免费"]
     },
     {
-        "id": 1769496830805,
+        "id": 20,
         "title": "欧洲跨境之路",
-        "category": "internship",
+        "category": "information",
+        "subCategory": "resource",
         "description": "结构化电商知识库 30+国平台实战指南",
         "url": "https://01234567.feishu.cn/wiki/AjBqwyp5yisP60kvNGAchQtSn7b",
         "rating": 4,
@@ -220,9 +240,10 @@
         "tags": ["跨国电商，免费"]
     },
     {
-        "id": 1769497128255,
+        "id": 21,
         "title": "大厂项目复盘",
-        "category": "internship",
+        "category": "information",
+        "subCategory": "resource",
         "description": "阿里、腾讯等大厂项目资料复盘",
         "url": "https://www.yuque.com/wikidesign/ykf0s9",
         "rating": 4,
@@ -231,9 +252,10 @@
         "tags": ["大厂项目复盘，免费"]
     },
     {
-        "id": 1769497267916,
+        "id": 22,
         "title": "office办公分享网",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "office、wps office等教程、使用建议",
         "url": "https://www.officeapi.cn/",
         "rating": 4,
@@ -242,9 +264,10 @@
         "tags": ["office，wps，办公教程，免费"]
     },
     {
-        "id": 1769497450606,
+        "id": 23,
         "title": "ExcelHome",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "深度学习excel，使用建议",
         "url": "https://www.excelhome.net/",
         "rating": 4,
@@ -253,9 +276,10 @@
         "tags": ["excel，免费"]
     },
     {
-        "id": 1769497637778,
+        "id": 24,
         "title": "基础教程网 | Teliu Te",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "电脑基础入门，Windows、c++等综合内容教程",
         "url": "https://teliute.org/",
         "rating": 4,
@@ -264,9 +288,10 @@
         "tags": ["电脑基础，免费"]
     },
     {
-        "id": 1769499314279,
+        "id": 25,
         "title": "AICoding基地",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "AI编程工具导航与开发者资讯整合平台",
         "url": "https://devmaster.cn/",
         "rating": 4,
@@ -275,9 +300,10 @@
         "tags": ["AI编程工具导航，开发者资讯，免费"]
     },
     {
-        "id": 1769499979695,
+        "id": 26,
         "title": "C语言教程",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "C语言详细教程",
         "url": "https://wangdoc.com/clang/",
         "rating": 4,
@@ -286,9 +312,10 @@
         "tags": ["C语言"]
     },
     {
-        "id": 1769500264996,
+        "id": 27,
         "title": "简单教程，简单编程",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "包含微信小程序开发、前端开发、后端开发，Java技术等简单教程",
         "url": "https://www.twle.cn/",
         "rating": 4,
@@ -297,9 +324,10 @@
         "tags": ["编程学习，微信小程序开发，移动开发，前后端开发，Java，…"]
     },
     {
-        "id": 1769502058442,
+        "id": 28,
         "title": "菜鸟教程",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "综合类编程学习平台",
         "url": "https://www.runoob.com/",
         "rating": 4,
@@ -308,9 +336,10 @@
         "tags": ["编程学习，Java，服务端，数据库，开发工具，Web Service，…"]
     },
     {
-        "id": 1769502354370,
+        "id": 29,
         "title": "LINUX - TUTORIAL",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "全面详细的Linux教程",
         "url": "https://dunwu.github.io/linux-tutorial/",
         "rating": 4,
@@ -319,9 +348,10 @@
         "tags": ["Iinux教程"]
     },
     {
-        "id": 1769503164806,
+        "id": 30,
         "title": "可灵AI·灵感学院",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "tool",
         "description": "详细免费视频制作教程",
         "url": "https://courses.klingai.com/",
         "rating": 4,
@@ -330,9 +360,10 @@
         "tags": ["可灵，官方教程"]
     },
     {
-        "id": 1769503611016,
+        "id": 31,
         "title": "Mechanical Library",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "详细介绍8种机械装置（如减速齿轮）",
         "url": "https://mechanical-library.org/",
         "rating": 4,
@@ -341,9 +372,10 @@
         "tags": ["机械装置，详解"]
     },
     {
-        "id": 1769503894191,
+        "id": 32,
         "title": "民间故事网",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "中国民间故事、外国民间故事、神话传说故事、机智故事等各类故事集",
         "url": "https://www.6mj.com/",
         "rating": 3.5,
@@ -352,9 +384,10 @@
         "tags": ["民间故事，综合全面"]
     },
     {
-        "id": 1769504068592,
+        "id": 33,
         "title": "B站网课资源推荐",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "对B站优质学习资源进行清晰分类，点击链接即可进入",
         "url": "https://gitmind.cn/app/docs/mpa0m9v0",
         "rating": 4,
@@ -363,9 +396,10 @@
         "tags": ["B站优质资源分类，快捷进入"]
     },
     {
-        "id": 1769504435594,
+        "id": 34,
         "title": "PubScholar公益学术平台",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "汇聚学术文章资源、科讯头条，配合AI智能",
         "url": "https://pubscholar.cn/",
         "rating": 5,
@@ -374,9 +408,10 @@
         "tags": ["学术资源，科讯头条，AI检索"]
     },
     {
-        "id": 1769504557645,
+        "id": 35,
         "title": "大学生福地",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "other",
         "description": "汇集各种公开课、英语、论文、考试信息、法律咨询等各类资源",
         "url": "https://xydh.fun/yiren",
         "rating": 4,
@@ -385,9 +420,10 @@
         "tags": ["各类资源"]
     },
     {
-        "id": 1769505557246,
+        "id": 36,
         "title": "学信网·万方论文查重",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "学信网万方数据文献相似性检测服务",
         "url": "https://chsi.wanfangtech.net/",
         "rating": 3.5,
@@ -396,9 +432,10 @@
         "tags": ["应届生免费一次，论文查重"]
     },
     {
-        "id": 1769505716586,
+        "id": 37,
         "title": "论文狗",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "每天专业版免费查重一篇，论文降重等",
         "url": "https://www.lunwengo.net/",
         "rating": 3.5,
@@ -407,9 +444,10 @@
         "tags": ["论文查重，每日免一篇"]
     },
     {
-        "id": 1769505896611,
+        "id": 38,
         "title": "PaperYY 论文查重",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "ALGC论文检测及智能降重服务，每日免费一次，11点多免费两次",
         "url": "https://www.paperyy.com/",
         "rating": 4,
@@ -418,9 +456,10 @@
         "tags": ["论文查重"]
     },
     {
-        "id": 1769506099671,
+        "id": 39,
         "title": "PaperDay",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "智能降重，自动排版，实时查重，标准版永久免费，旗舰版每日限免",
         "url": "https://www.paperday.cn/",
         "rating": 4,
@@ -429,9 +468,10 @@
         "tags": ["论文查重，降重"]
     },
     {
-        "id": 1769506245956,
+        "id": 40,
         "title": "Writepass",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "AI降重，双擎降重，ALGC检测、降重，论文查重，每日1000个免费名额",
         "url": "https://www.writepass.cn/",
         "rating": 3.5,
@@ -440,9 +480,10 @@
         "tags": ["论文查重"]
     },
     {
-        "id": 1769506326356,
+        "id": 41,
         "title": "超星大雅",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "论文查重降重，免费看相似度",
         "url": "https://dsa.dayainfo.com/",
         "rating": 3.5,
@@ -451,9 +492,10 @@
         "tags": ["论文查重"]
     },
     {
-        "id": 1769506428877,
+        "id": 42,
         "title": "公开真题库",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "公务员、事业单位等试题库，真题回忆",
         "url": "https://www.gkzenti.cn/",
         "rating": 4,
@@ -462,9 +504,10 @@
         "tags": ["考公，事业单位，真题"]
     },
     {
-        "id": 1769506625592,
+        "id": 43,
         "title": "牛客",
-        "category": "internship",
+        "category": "website",
+        "subCategory": "career",
         "description": "企业面试笔试、考公、国央企等试题练习、真题大全",
         "url": "https://www.nowcoder.com/exam/company?questionJobId=10&subTabName=written_page",
         "rating": 4.5,
@@ -473,9 +516,10 @@
         "tags": ["企业面试笔试，考公，国央企，真题"]
     },
     {
-        "id": 1769507147473,
+        "id": 44,
         "title": "赛码",
-        "category": "internship",
+        "category": "website",
+        "subCategory": "career",
         "description": "名企真题、校园招聘信息及考试日历",
         "url": "https://www.acmcoder.com/#/practice/company",
         "rating": 4,
@@ -484,9 +528,10 @@
         "tags": ["名企真题，校园招聘"]
     },
     {
-        "id": 1769507238533,
+        "id": 45,
         "title": "简搜题",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "tool",
         "description": "永久免费各类热门题库",
         "url": "https://www.jiansouti.com/",
         "rating": 3.5,
@@ -495,9 +540,10 @@
         "tags": ["热门题库，各类"]
     },
     {
-        "id": 1769508928064,
+        "id": 46,
         "title": "中国重点高校分布图",
-        "category": "tools",
+        "category": "information",
+        "subCategory": "resource",
         "description": "中国985/211工程及双一流重点大学地理位置分布可视化",
         "url": "https://uni.utities.online/",
         "rating": 4,
@@ -506,9 +552,10 @@
         "tags": ["重点高校，分布图"]
     },
     {
-        "id": 1769509111685,
+        "id": 47,
         "title": " PPT库",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "高品质免费PPT模板库",
         "url": "https://pptku.org/",
         "rating": 4,
@@ -517,9 +564,10 @@
         "tags": ["PPT模板"]
     },
     {
-        "id": 1769509238302,
+        "id": 48,
         "title": "第1PPT",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "简陋但免费的PPT背景图片、模板，免费下载",
         "url": "https://www.1ppt.com/",
         "rating": 4,
@@ -528,9 +576,10 @@
         "tags": ["PPT模板"]
     },
     {
-        "id": 1769509342401,
+        "id": 49,
         "title": "PPT.CDTools",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "免费PPT模板下载，海量精美",
         "url": "https://ppt.cdtools.click/",
         "rating": 4,
@@ -539,9 +588,10 @@
         "tags": ["PPT模板，优质免费"]
     },
     {
-        "id": 1769509435920,
+        "id": 50,
         "title": "飞职AI简历",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "career",
         "description": "免费AI简历生成工具",
         "url": "https://www.jianliai.com/",
         "rating": 4,
@@ -550,9 +600,10 @@
         "tags": ["简历生成，AI"]
     },
     {
-        "id": 1769509672362,
+        "id": 51,
         "title": "魔方简历 - 仪表盘",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "career",
         "description": "内置智能语法检查，免费制作简历",
         "url": "https://magicv.art/zh",
         "rating": 4.5,
@@ -561,9 +612,10 @@
         "tags": ["简历制作，智能"]
     },
     {
-        "id": 1769509764686,
+        "id": 52,
         "title": "简历下载",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "career",
         "description": "免登录一键下载，专业简历模板，word格式可编辑",
         "url": "https://jianlixiazai.cn/",
         "rating": 4.5,
@@ -572,9 +624,10 @@
         "tags": ["简历模板下载，word格式"]
     },
     {
-        "id": 1769509900654,
+        "id": 53,
         "title": "简历生成",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "career",
         "description": "在线简历生成工具",
         "url": "https://dnd-resume.com/editor",
         "rating": 3.5,
@@ -583,9 +636,10 @@
         "tags": ["简历生成"]
     },
     {
-        "id": 1769764741303,
+        "id": 54,
         "title": "学术搜索",
-        "category": "learning",
+        "category": "website",
+        "subCategory": "learning",
         "description": "学术搜索-站在巨人的肩膀上",
         "url": "https://scholar.chongbuluo.com/",
         "rating": 4.5,
@@ -594,9 +648,10 @@
         "tags": ["学术文章"]
     },
     {
-        "id": 1769765105977,
+        "id": 55,
         "title": "快打字",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "专业系统性的在线打字练习网站，面向学生、白领及计算机工作者等",
         "url": "https://www.kuaidazi.cn/",
         "rating": 4.5,
@@ -605,9 +660,10 @@
         "tags": ["打字练习"]
     },
     {
-        "id": 1769765193793,
+        "id": 56,
         "title": "多多记单词",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "learning",
         "description": "艾宾浩斯21天抗遗忘记忆法",
         "url": "https://ddjdc.com/",
         "rating": 4,
@@ -616,9 +672,10 @@
         "tags": ["记单词，艾宾浩斯"]
     },
     {
-        "id": 1769765302849,
+        "id": 57,
         "title": "HiSpeaking",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "learning",
         "description": "沉浸式英语跟读工具",
         "url": "https://hispeaking.com/",
         "rating": 4,
@@ -627,9 +684,10 @@
         "tags": ["英语跟读，沉浸式"]
     },
     {
-        "id": 1769765555017,
+        "id": 58,
         "title": "读典籍",
-        "category": "learning",
+        "category": "information",
+        "subCategory": "resource",
         "description": "探索中华典籍，体验文白对照、交互式注释及导读工具",
         "url": "https://dudianji.com/",
         "rating": 4,
@@ -638,9 +696,10 @@
         "tags": ["中华典籍，文白对照，交互式"]
     },
     {
-        "id": 1769765685557,
+        "id": 59,
         "title": "Enpuz",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "learning",
         "description": "在线英语句子语法分析",
         "url": "https://enpuz.com/",
         "rating": 4,
@@ -649,9 +708,10 @@
         "tags": ["英语句子分析，AI小工具"]
     },
     {
-        "id": 1769765864038,
+        "id": 60,
         "title": "爱给",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "音效配乐、3D模型、视频素材免费下载",
         "url": "https://www.aigei.com/",
         "rating": 4,
@@ -660,9 +720,10 @@
         "tags": ["创作素材，音效配乐，3D模型，…"]
     },
     {
-        "id": 1769766110072,
+        "id": 61,
         "title": "iLovePDF",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "合并、拆分、压缩、转换、旋转和解锁PDF文件，以及给PDF文件添加水印等",
         "url": "https://www.ilovepdf.com/zh-cn",
         "rating": 4,
@@ -671,9 +732,10 @@
         "tags": ["PDF转换"]
     },
     {
-        "id": 1769766319891,
+        "id": 62,
         "title": "Make Graph",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "免费制作多种图表",
         "url": "https://makegraph.app/",
         "rating": 4,
@@ -682,9 +744,10 @@
         "tags": ["图表制作"]
     },
     {
-        "id": 1769766428687,
+        "id": 63,
         "title": "电子书转思维导图",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "tool",
         "description": "将电子书转为思维导图形式",
         "url": "https://ebook2me.mind-elixir.com/",
         "rating": 4,
@@ -693,9 +756,10 @@
         "tags": ["电子书转思维导图"]
     },
     {
-        "id": 1769766926052,
+        "id": 64,
         "title": "证件照换底色",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "在线证件照换底色",
         "url": "https://www.bgconverter.com/",
         "rating": 4,
@@ -704,9 +768,10 @@
         "tags": ["证件照换底色"]
     },
     {
-        "id": 1769767009978,
+        "id": 65,
         "title": "证件星",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "AI智能证件照制作，限时免费",
         "url": "https://zhengjianxing.cn/",
         "rating": 4,
@@ -715,9 +780,10 @@
         "tags": ["证件照制作"]
     },
     {
-        "id": 1769767087708,
+        "id": 66,
         "title": "证件照大师",
-        "category": "tools",
+        "category": "website",
+        "subCategory": "design",
         "description": "让证件照处理更简单",
         "url": "https://id-photo.cn/",
         "rating": 4,
