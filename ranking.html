@@ -508,6 +508,26 @@
         </div>
     </footer>
 
+    <!-- Firebase配置 -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script>
+        // Firebase配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9dY5eF-9a8z6Q4c8X3e7fG9hI7jK8lM",
+            authDomain: "xiaotiao-website.firebaseapp.com",
+            databaseURL: "https://xiaotiao-website-default-rtdb.firebaseio.com",
+            projectId: "xiaotiao-website",
+            storageBucket: "xiaotiao-website.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+        
+        // 初始化Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+    
     <!-- JavaScript文件 -->
     <script src="js/main.js"></script>
     <script>
@@ -707,6 +727,9 @@
                 PointsManager.initUserPoints(currentUser.username);
             }
             
+            // 从Firebase同步数据
+            PointsManager.syncFromFirebase();
+            
             // 初始加载
             loadRanking();
             
@@ -728,6 +751,29 @@
             
             // 定时刷新排行榜数据（每5秒，更频繁的实时更新）
             setInterval(loadRanking, 5000);
+            
+            // 监听localStorage变化，实现跨标签页实时更新
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'usersPointsUpdated') {
+                    loadRanking();
+                }
+            });
+            
+            // 监听Firebase数据变化，实现跨设备实时更新
+            if (typeof firebase !== 'undefined' && firebase.database) {
+                try {
+                    firebase.database().ref('usersPoints').on('value', function(snapshot) {
+                        const usersPoints = snapshot.val();
+                        if (usersPoints) {
+                            localStorage.setItem('usersPoints', JSON.stringify(usersPoints));
+                            localStorage.setItem('usersPointsUpdated', Date.now().toString());
+                            loadRanking();
+                        }
+                    });
+                } catch (error) {
+                    console.error('监听Firebase数据变化失败:', error);
+                }
+            }
         });
     </script>
 </body>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 问茧</title>
+    <meta name="description" content="个人中心，查看个人信息、收藏和积分">
+    <meta name="keywords" content="个人中心,收藏,积分,问茧">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            background: #f5f7fa;
+            padding: 4rem 0;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .profile-username {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-email {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+        }
+        
+        .profile-stat {
+            text-align: center;
+        }
+        
+        .profile-stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .profile-stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 2rem;
+        }
+        
+        .profile-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .profile-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .profile-tab-content {
+            display: none;
+        }
+        
+        .profile-tab-content.active {
+            display: block;
+        }
+        
+        .favorites-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .favorite-item {
+            background: #f8f9fa;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .favorite-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .favorite-item h3 {
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+        }
+        
+        .favorite-item p {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .favorite-item-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="#search-box" class="search-link"><i class="fas fa-search"></i> 搜索</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="container profile-container">
+        <h1 class="section-title">个人中心</h1>
+        
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 class="profile-username" id="profile-username">用户名</h2>
+                <p class="profile-email" id="profile-email">邮箱地址</p>
+                
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <span class="profile-stat-number" id="profile-points">0</span>
+                        <span class="profile-stat-label">积分</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-number" id="profile-favorites">0</span>
+                        <span class="profile-stat-label">收藏</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-number" id="profile-submissions">0</span>
+                        <span class="profile-stat-label">提交</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" data-tab="info">个人信息</div>
+                <div class="profile-tab" data-tab="favorites">我的收藏</div>
+                <div class="profile-tab" data-tab="settings">设置</div>
+            </div>
+            
+            <div class="profile-tab-content active" id="info-tab">
+                <h3>个人信息</h3>
+                <p>这里显示您的个人信息，包括用户名、邮箱等。</p>
+                <div class="form-group">
+                    <label>用户名</label>
+                    <p id="info-username">用户名</p>
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <p id="info-email">邮箱地址</p>
+                </div>
+                <div class="form-group">
+                    <label>注册时间</label>
+                    <p id="info-created">2024-01-01</p>
+                </div>
+            </div>
+            
+            <div class="profile-tab-content" id="favorites-tab">
+                <h3>我的收藏</h3>
+                <div class="favorites-list" id="favorites-list">
+                    <!-- 收藏内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="profile-tab-content" id="settings-tab">
+                <h3>设置</h3>
+                <p>这里可以设置您的账户信息。</p>
+                <button class="btn btn-secondary" onclick="UserManager.logout()">
+                    <i class="fas fa-sign-out-alt"></i> 登出账户
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=website"><i class="fas fa-globe"></i> 网站类</a></li>
+                    <li><a href="resources.html?category=information"><i class="fas fa-newspaper"></i> 信息类</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否登录
+            if (!UserManager.isLoggedIn()) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // 更新用户菜单
+            UserManager.updateUserMenu();
+            
+            // 加载用户信息
+            loadUserInfo();
+            
+            // 加载收藏内容
+            loadFavorites();
+            
+            // 绑定标签切换事件
+            const tabs = document.querySelectorAll('.profile-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有活动状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // 添加活动状态
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 检查URL是否包含#favorites，如果是则切换到收藏标签
+            if (window.location.hash === '#favorites') {
+                // 移除所有活动状态
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 激活收藏标签
+                const favoritesTab = document.querySelector('.profile-tab[data-tab="favorites"]');
+                const favoritesContent = document.getElementById('favorites-tab');
+                if (favoritesTab && favoritesContent) {
+                    favoritesTab.classList.add('active');
+                    favoritesContent.classList.add('active');
+                }
+            }
+        });
+        
+        // 加载用户信息
+        function loadUserInfo() {
+            const user = UserManager.getCurrentUser();
+            const userPoints = PointsManager.getUserPoints(user.username);
+            
+            document.getElementById('profile-username').textContent = user.username;
+            document.getElementById('profile-email').textContent = user.email;
+            document.getElementById('profile-points').textContent = userPoints.points;
+            document.getElementById('profile-submissions').textContent = userPoints.submissions || 0;
+            
+            document.getElementById('info-username').textContent = user.username;
+            document.getElementById('info-email').textContent = user.email;
+            document.getElementById('info-created').textContent = new Date(user.createdAt).toLocaleDateString();
+        }
+        
+        // 加载收藏内容
+        function loadFavorites() {
+            const favorites = FavoriteManager.getFavorites();
+            const favoritesList = document.getElementById('favorites-list');
+            const profileFavorites = document.getElementById('profile-favorites');
+            
+            profileFavorites.textContent = favorites.length;
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h3>暂无收藏</h3>
+                        <p>浏览资源库，收藏你喜欢的资源吧！</p>
+                        <a href="resources.html" class="btn btn-primary">
+                            <i class="fas fa-book"></i> 浏览资源
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 加载资源数据
+            ResourceManager.loadResources().then(() => {
+                const resources = ResourceManager.getResources();
+                const favoriteResources = resources.filter(resource => 
+                    favorites.includes(resource.id.toString())
+                );
+                
+                favoritesList.innerHTML = '';
+                
+                favoriteResources.forEach(resource => {
+                    const favoriteItem = document.createElement('div');
+                    favoriteItem.className = 'favorite-item';
+                    
+                    const displayCategory = resource.category === 'website' ? '网站类' : '信息类';
+                    
+                    favoriteItem.innerHTML = `
+                        <h3>${resource.title}</h3>
+                        <p>${resource.description}</p>
+                        <div class="resource-info">
+                            <span class="resource-category">
+                                <i class="fas fa-${resource.category === 'website' ? 'globe' : 'newspaper'}"></i> ${displayCategory}
+                            </span>
+                        </div>
+                        <div class="favorite-item-actions">
+                            <a href="resource-detail.html?id=${resource.id}" class="btn btn-secondary btn-small">
+                                <i class="fas fa-info-circle"></i> 查看详情
+                            </a>
+                            <button class="btn btn-primary btn-small" onclick="removeFavorite(${resource.id})">
+                                <i class="fas fa-trash"></i> 取消收藏
+                            </button>
+                        </div>
+                    `;
+                    
+                    favoritesList.appendChild(favoriteItem);
+                });
+            });
+        }
+        
+        // 取消收藏
+        function removeFavorite(resourceId) {
+            FavoriteManager.toggleFavorite(resourceId);
+            loadFavorites();
+        }
+    </script>
+</body>
+</html>

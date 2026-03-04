@@ -1505,12 +1505,13 @@ body {
 }
 
 .resource-footer {
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     background: #f8fafc;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: var(--transition);
+    border-top: 1px solid var(--light-gray);
 }
 
 .resource-card:hover .resource-footer {
@@ -1520,7 +1521,8 @@ body {
 .resource-info {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
+    flex: 1;
 }
 
 .resource-grade {
@@ -1530,6 +1532,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .resource-card:hover .resource-grade {
@@ -1549,12 +1552,15 @@ body {
 .resource-rating {
     color: #ffc107;
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .resource-card:hover .resource-rating {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .resource-link {
@@ -1562,17 +1568,18 @@ body {
     text-decoration: none;
     font-weight: 600;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 0.8rem 1.8rem;
+    padding: 0.9rem 1.5rem;
     border-radius: var(--radius-lg);
     transition: var(--transition);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    white-space: nowrap;
 }
 
 .resource-link:hover {
-    transform: translateX(8px) scale(1.05);
+    transform: translateY(-2px) scale(1.05);
     box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
     background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
 }

@@ -345,9 +345,12 @@
                             <tr>
                                 <th>ID</th>
                                 <th>标题</th>
-                                <th>提交者</th>
+                                <th>描述</th>
+                                <th>链接</th>
                                 <th>分类</th>
-                                <th>状态</th>
+                                <th>年级</th>
+                                <th>免费</th>
+                                <th>提交者</th>
                                 <th>提交时间</th>
                                 <th>操作</th>
                             </tr>
@@ -463,9 +466,12 @@
                 row.innerHTML = `
                     <td>${resource.id}</td>
                     <td>${resource.title}</td>
-                    <td>${resource.submitter}</td>
+                    <td>${resource.description.substring(0, 50)}${resource.description.length > 50 ? '...' : ''}</td>
+                    <td><a href="${resource.url}" target="_blank">${resource.url.substring(0, 30)}${resource.url.length > 30 ? '...' : ''}</a></td>
                     <td>${resource.category}</td>
-                    <td><span class="admin-badge admin-badge-pending">待审核</span></td>
+                    <td>${resource.grade}</td>
+                    <td>${resource.free ? '是' : '否'}</td>
+                    <td>${resource.submitter}</td>
                     <td>${new Date(resource.submittedAt).toLocaleString()}</td>
                     <td class="admin-actions">
                         <button class="admin-action-btn admin-action-view" onclick="viewResource(${resource.id})">查看</button>

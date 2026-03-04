@@ -1365,6 +1365,18 @@ const PointsManager = {
     // 保存用户积分
     saveUsersPoints(users) {
         StorageUtil.set('usersPoints', users);
+        // 触发storage事件，通知其他标签页更新
+        localStorage.setItem('usersPointsUpdated', Date.now().toString());
+        
+        // 如果Firebase可用，同步到Firebase
+        if (typeof firebase !== 'undefined' && firebase.database) {
+            try {
+                firebase.database().ref('usersPoints').set(users);
+                console.log('积分数据已同步到Firebase');
+            } catch (error) {
+                console.error('同步到Firebase失败:', error);
+            }
+        }
     },
     
     // 增加用户积分
@@ -1450,6 +1462,28 @@ const PointsManager = {
         }
         console.log('今日已领取过积分:', user);
         return user;
+    },
+    
+    // 从Firebase同步数据
+    syncFromFirebase() {
+        if (typeof firebase !== 'undefined' && firebase.database) {
+            try {
+                firebase.database().ref('usersPoints').once('value')
+                    .then(snapshot => {
+                        const usersPoints = snapshot.val();
+                        if (usersPoints) {
+                            StorageUtil.set('usersPoints', usersPoints);
+                            localStorage.setItem('usersPointsUpdated', Date.now().toString());
+                            console.log('从Firebase同步积分数据成功');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('从Firebase同步数据失败:', error);
+                    });
+            } catch (error) {
+                console.error('从Firebase同步数据失败:', error);
+            }
+        }
     }
 };
 
@@ -1525,6 +1559,24 @@ const UserManager = {
                 DOMUtil.on(logoutBtn, 'click', (e) => {
                     e.preventDefault();
                     this.logout();
+                });
+            }
+            
+            // 绑定个人中心按钮事件
+            const profileLink = userMenu.querySelector('.dropdown-item:nth-child(1)');
+            if (profileLink) {
+                DOMUtil.on(profileLink, 'click', (e) => {
+                    e.preventDefault();
+                    window.location.href = 'profile.html';
+                });
+            }
+            
+            // 绑定我的收藏按钮事件
+            const favoritesLink = userMenu.querySelector('.dropdown-item:nth-child(3)');
+            if (favoritesLink) {
+                DOMUtil.on(favoritesLink, 'click', (e) => {
+                    e.preventDefault();
+                    window.location.href = 'profile.html#favorites';
                 });
             }
             
