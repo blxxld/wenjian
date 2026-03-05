@@ -19,6 +19,26 @@
     <div class="preloader" id="preloader">
         <div class="preloader-spinner"></div>
     </div>
+    
+    <script>
+        // 页面加载完成后隐藏预加载动画
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.classList.add('hidden');
+                }
+            }, 500);
+        });
+        
+        // 立即执行的代码，确保预加载动画能够隐藏
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.classList.add('hidden');
+            }
+        }, 2000);
+    </script>
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
@@ -220,7 +240,7 @@
     </footer>
 
     <!-- JavaScript文件 -->
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
     <script>
         // 注册 Service Worker
         if ('serviceWorker' in navigator) {

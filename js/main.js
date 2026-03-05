@@ -327,55 +327,86 @@ const UserManager = {
 
 // 页面初始化
 async function initPage() {
+    console.log('开始初始化页面...');
     const startTime = performance.now();
     
     // 先执行同步操作，确保页面基础功能正常
     function initSyncTasks() {
+        console.log('执行同步任务...');
         // 确保管理员账户存在
-        UserManager.ensureAdminAccount();
+        try {
+            UserManager.ensureAdminAccount();
+            console.log('管理员账户检查完成');
+        } catch (error) {
+            console.error('管理员账户检查失败:', error);
+        }
         
         // 移动端菜单切换
-        const navToggle = DOMUtil.$('.nav-toggle');
-        const navMenu = DOMUtil.$('.nav-menu');
-        
-        if (navToggle && navMenu) {
-            DOMUtil.on(navToggle, 'click', function() {
-                navMenu.classList.toggle('active');
-            });
+        try {
+            const navToggle = DOMUtil.$('.nav-toggle');
+            const navMenu = DOMUtil.$('.nav-menu');
+            
+            if (navToggle && navMenu) {
+                DOMUtil.on(navToggle, 'click', function() {
+                    navMenu.classList.toggle('active');
+                });
+                console.log('移动端菜单初始化完成');
+            }
+        } catch (error) {
+            console.error('移动端菜单初始化失败:', error);
         }
         
         // 更新用户菜单
-        UserManager.updateUserMenu();
+        try {
+            UserManager.updateUserMenu();
+            console.log('用户菜单更新完成');
+        } catch (error) {
+            console.error('用户菜单更新失败:', error);
+        }
         
         // 搜索功能初始化
-        SearchSystem.init();
+        try {
+            SearchSystem.init();
+            console.log('搜索功能初始化完成');
+        } catch (error) {
+            console.error('搜索功能初始化失败:', error);
+        }
         
         // 键盘快捷键支持
-        DOMUtil.on(document, 'keydown', function(e) {
-            // 按 Ctrl/Cmd + K 打开搜索
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                const searchBox = DOMUtil.$('#search-input');
-                if (searchBox) {
-                    searchBox.focus();
+        try {
+            DOMUtil.on(document, 'keydown', function(e) {
+                // 按 Ctrl/Cmd + K 打开搜索
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    const searchBox = DOMUtil.$('#search-input');
+                    if (searchBox) {
+                        searchBox.focus();
+                    }
                 }
-            }
-            
-            // 按 Escape 关闭搜索
-            if (e.key === 'Escape') {
-                const searchBox = DOMUtil.$('#search-input');
-                if (searchBox) {
-                    searchBox.blur();
-                    SearchSystem.hideSearchSuggestions();
+                
+                // 按 Escape 关闭搜索
+                if (e.key === 'Escape') {
+                    const searchBox = DOMUtil.$('#search-input');
+                    if (searchBox) {
+                        searchBox.blur();
+                        try {
+                            SearchSystem.hideSearchSuggestions();
+                        } catch (error) {
+                            console.error('隐藏搜索建议失败:', error);
+                        }
+                    }
                 }
-            }
-            
-            // 按 Ctrl/Cmd + Home 回到顶部
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Home') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
+                
+                // 按 Ctrl/Cmd + Home 回到顶部
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Home') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+            console.log('键盘快捷键初始化完成');
+        } catch (error) {
+            console.error('键盘快捷键初始化失败:', error);
+        }
     }
     
     // 执行同步任务
@@ -383,23 +414,45 @@ async function initPage() {
     
     // 异步加载资源数据
     try {
+        console.log('开始加载资源数据...');
         await ResourceManager.loadResources();
+        console.log('资源数据加载完成');
         
         // 资源加载完成后执行后续操作
-        const hotResourcesContainer = DOMUtil.$('#hot-resources');
-        if (hotResourcesContainer) {
-            const hotResources = ResourceManager.getHotResources(6);
-            ResourceDisplay.displayResources(hotResources, hotResourcesContainer);
-            
-            // 初始化动画（仅在首页）
-            AnimationManager.initAllAnimations();
+        try {
+            const hotResourcesContainer = DOMUtil.$('#hot-resources');
+            if (hotResourcesContainer) {
+                const hotResources = ResourceManager.getHotResources(6);
+                ResourceDisplay.displayResources(hotResources, hotResourcesContainer);
+                console.log('热门资源显示完成');
+                
+                // 初始化动画（仅在首页）
+                try {
+                    AnimationManager.initAllAnimations();
+                    console.log('动画初始化完成');
+                } catch (error) {
+                    console.error('动画初始化失败:', error);
+                }
+            }
+        } catch (error) {
+            console.error('显示热门资源失败:', error);
         }
         
         // 更新关于页面的统计数据
-        StatsManager.updateAboutStats();
+        try {
+            StatsManager.updateAboutStats();
+            console.log('统计数据更新完成');
+        } catch (error) {
+            console.error('统计数据更新失败:', error);
+        }
         
         // 初始化筛选系统（在资源页面）
-        FilterSystem.init();
+        try {
+            FilterSystem.init();
+            console.log('筛选系统初始化完成');
+        } catch (error) {
+            console.error('筛选系统初始化失败:', error);
+        }
         
     } catch (error) {
         console.error('初始化页面失败:', error);
@@ -407,6 +460,17 @@ async function initPage() {
     
     const endTime = performance.now();
     console.log('页面初始化完成，耗时:', (endTime - startTime).toFixed(2), 'ms');
+    
+    // 强制隐藏预加载动画
+    try {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            console.log('隐藏预加载动画');
+            preloader.classList.add('hidden');
+        }
+    } catch (error) {
+        console.error('隐藏预加载动画失败:', error);
+    }
 }
 
 // 预加载动画功能

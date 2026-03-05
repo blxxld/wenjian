@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES模块测试</title>
+</head>
+<body>
+    <h1>ES模块测试</h1>
+    <div id="test-result"></div>
+    
+    <script type="module">
+        console.log('ES模块加载成功');
+        document.getElementById('test-result').textContent = 'ES模块加载成功';
+        
+        // 测试导入模块
+        try {
+            import('./js/modules/utils.js').then(module => {
+                console.log('成功导入utils.js模块');
+                document.getElementById('test-result').textContent += ' | 成功导入utils.js模块';
+            });
+        } catch (error) {
+            console.error('导入模块失败:', error);
+            document.getElementById('test-result').textContent += ' | 导入模块失败: ' + error.message;
+        }
+    </script>
+</body>
+</html>
