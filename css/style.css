@@ -680,6 +680,39 @@ body {
     color: var(--warning-color);
 }
 
+.hot-rank {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--gray-color);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.hot-rank.top-rank {
+    background: var(--accent-color);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.hot-rank.top-rank:nth-child(2) {
+    background: var(--warning-color);
+}
+
+.hot-rank.top-rank:nth-child(3) {
+    background: var(--success-color);
+}
+
+.hot-icon {
+    margin-left: auto;
+    font-size: 0.9rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
 .search-highlight {
     background: var(--primary-color);
     color: white;
@@ -1584,6 +1617,65 @@ body {
     background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
 }
 
+/* 信息类资源样式 */
+.info-content {
+    margin-bottom: 1.5rem;
+}
+
+.info-detail {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: var(--light-gray);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--dark-color);
+}
+
+.info-content-preview {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.info-content-full {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.read-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.read-more-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+.info-detail p {
+    margin-bottom: 1rem;
+}
+
+.info-detail p:last-child {
+    margin-bottom: 0;
+}
+
 /* ==================== 筛选功能 ==================== */
 .filter-tags {
     display: flex;
@@ -2420,6 +2512,66 @@ body {
     }
 }
 
+/* 预加载动画 */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.preloader-spinner {
+    width: 80px;
+    height: 80px;
+    border: 4px solid rgba(58, 134, 255, 0.1);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 滚动到顶部按钮 */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: var(--transition);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.scroll-to-top.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-10px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+}
+
 /* 小屏幕移动端优化 */
 @media (max-width: 480px) {
     /* 基础样式 */
@@ -2694,6 +2846,57 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        padding: 1.2rem 2.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .resource-card {
+        padding: 2rem;
+    }
+    
+    .category-card {
+        padding: 2.5rem 2rem;
+    }
+    
+    .search-suggestion-item {
+        padding: 1.2rem 1.5rem;
+    }
+    
+    .scroll-to-top {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    /* 预加载动画 */
+    .preloader-spinner {
+        width: 60px;
+        height: 60px;
+    }
+    
+    /* 热门搜索 */
+    .hot-rank {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        font-size: 0.7rem;
+    }
+    
+    .hot-icon {
+        font-size: 0.8rem;
+    }
 }
 
 /* ==================== 滚动到顶部按钮 ==================== */

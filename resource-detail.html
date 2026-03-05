@@ -255,6 +255,11 @@
     </style>
 </head>
 <body>
+    <!-- 预加载动画 -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-spinner"></div>
+    </div>
+    
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
@@ -641,5 +646,10 @@
             return tips[category] || '这是一个优质资源，建议根据自身需求合理使用。';
         }
     </script>
+    
+    <!-- 滚动到顶部按钮 -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 </body>
 </html>

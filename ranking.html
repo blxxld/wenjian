@@ -524,8 +524,10 @@
         };
         
         // 初始化Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        if (typeof firebase !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+        }
     </script>
     
     <!-- JavaScript文件 -->
@@ -719,8 +721,53 @@
             }
         }
         
+        // 添加测试数据
+        function addTestData() {
+            const testUsers = {
+                'user1': {
+                    points: 100,
+                    username: '用户1',
+                    lastLogin: new Date().toISOString(),
+                    submissions: 5
+                },
+                'user2': {
+                    points: 80,
+                    username: '用户2',
+                    lastLogin: new Date().toISOString(),
+                    submissions: 3
+                },
+                'user3': {
+                    points: 60,
+                    username: '用户3',
+                    lastLogin: new Date().toISOString(),
+                    submissions: 2
+                },
+                'user4': {
+                    points: 40,
+                    username: '用户4',
+                    lastLogin: new Date().toISOString(),
+                    submissions: 1
+                },
+                'user5': {
+                    points: 20,
+                    username: '用户5',
+                    lastLogin: new Date().toISOString(),
+                    submissions: 0
+                }
+            };
+            
+            localStorage.setItem('usersPoints', JSON.stringify(testUsers));
+            localStorage.setItem('usersPointsUpdated', Date.now().toString());
+            console.log('添加测试数据成功');
+        }
+        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 添加测试数据（仅在本地存储为空时）
+            if (!localStorage.getItem('usersPoints')) {
+                addTestData();
+            }
+            
             // 确保用户积分已初始化
             const currentUser = UserManager.getCurrentUser();
             if (currentUser) {

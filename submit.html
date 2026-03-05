@@ -114,6 +114,43 @@
             border-color: var(--warning-color);
         }
         
+        /* 切换标签样式 */
+        .form-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .form-tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .form-tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .form-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        /* 表单内容区域 */
+        .form-content {
+            display: none;
+        }
+        
+        .form-content.active {
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .form-container {
                 padding: 2rem;
@@ -125,6 +162,21 @@
             
             .form-actions .btn {
                 width: 100%;
+            }
+            
+            .form-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .form-tab {
+                border-bottom: 1px solid var(--light-gray);
+                text-align: left;
+            }
+            
+            .form-tab.active {
+                border-left: 4px solid var(--primary-color);
+                border-bottom: 1px solid var(--light-gray);
             }
         }
     </style>
@@ -170,61 +222,113 @@
                     <p>感谢你的贡献，我们会尽快审核你提交的资源。</p>
                 </div>
 
+                <!-- 表单切换标签 -->
+                <div class="form-tabs">
+                    <button class="form-tab active" data-tab="website">提交网址</button>
+                    <button class="form-tab" data-tab="information">提交信息</button>
+                </div>
+
                 <!-- 提交表单 -->
                 <form id="submitForm" onsubmit="return handleSubmit(event)">
-                    <div class="form-group">
-                        <label for="resourceTitle" class="form-label">资源标题 *</label>
-                        <input type="text" id="resourceTitle" class="form-input" placeholder="请输入资源标题" required>
-                        <div class="error-message" id="resourceTitleError">请输入资源标题</div>
-                    </div>
+                    <!-- 网站类表单 -->
+                    <div class="form-content active" data-tab="website">
+                        <div class="form-group">
+                            <label for="resourceTitle" class="form-label">资源标题 *</label>
+                            <input type="text" id="resourceTitle" class="form-input" placeholder="请输入资源标题" required>
+                            <div class="error-message" id="resourceTitleError">请输入资源标题</div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="resourceUrl" class="form-label">资源链接 *</label>
-                        <input type="url" id="resourceUrl" class="form-input" placeholder="请输入资源链接（http:// 或 https://）" required>
-                        <div class="error-message" id="resourceUrlError">请输入有效的资源链接</div>
-                    </div>
+                        <div class="form-group">
+                            <label for="resourceUrl" class="form-label">资源链接 *</label>
+                            <input type="url" id="resourceUrl" class="form-input" placeholder="请输入资源链接（http:// 或 https://）" required>
+                            <div class="error-message" id="resourceUrlError">请输入有效的资源链接</div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="resourceCategory" class="form-label">资源分类 *</label>
-                        <select id="resourceCategory" class="form-select" required>
-                            <option value="">请选择分类</option>
-                            <option value="website">网站类</option>
-                            <option value="information">信息类</option>
-                        </select>
-                        <div class="error-message" id="resourceCategoryError">请选择资源分类</div>
-                    </div>
+                        <div class="form-group">
+                            <label for="resourceDescription" class="form-label">资源描述 *</label>
+                            <textarea id="resourceDescription" class="form-textarea" placeholder="请详细描述资源的内容和价值" required></textarea>
+                            <div class="error-message" id="resourceDescriptionError">请输入资源描述</div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="resourceDescription" class="form-label">资源描述 *</label>
-                        <textarea id="resourceDescription" class="form-textarea" placeholder="请详细描述资源的内容和价值" required></textarea>
-                        <div class="error-message" id="resourceDescriptionError">请输入资源描述</div>
-                    </div>
+                        <div class="form-group">
+                            <label for="resourceGrade" class="form-label">适用年级</label>
+                            <select id="resourceGrade" class="form-select">
+                                <option value="all">全部年级</option>
+                                <option value="freshman">大一</option>
+                                <option value="sophomore">大二</option>
+                                <option value="junior">大三</option>
+                                <option value="senior">大四</option>
+                                <option value="graduate">研究生</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="resourceGrade" class="form-label">适用年级</label>
-                        <select id="resourceGrade" class="form-select">
-                            <option value="all">全部年级</option>
-                            <option value="freshman">大一</option>
-                            <option value="sophomore">大二</option>
-                            <option value="junior">大三</option>
-                            <option value="senior">大四</option>
-                            <option value="graduate">研究生</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="resourceTags" class="form-label">标签（用逗号分隔）</label>
+                            <input type="text" id="resourceTags" class="form-input" placeholder="例如：学习,免费,编程">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="resourceTags" class="form-label">标签（用逗号分隔）</label>
-                        <input type="text" id="resourceTags" class="form-input" placeholder="例如：学习,免费,编程">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">是否免费</label>
-                        <div class="form-checkbox">
-                            <input type="checkbox" id="resourceFree" checked>
-                            <label for="resourceFree">是，免费资源</label>
+                        <div class="form-group">
+                            <label class="form-label">是否免费</label>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="resourceFree" checked>
+                                <label for="resourceFree">是，免费资源</label>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- 信息类表单 -->
+                    <div class="form-content" data-tab="information">
+                        <div class="form-group">
+                            <label for="infoTitle" class="form-label">信息标题 *</label>
+                            <input type="text" id="infoTitle" class="form-input" placeholder="请输入信息标题" required>
+                            <div class="error-message" id="infoTitleError">请输入信息标题</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infoDescription" class="form-label">信息描述 *</label>
+                            <textarea id="infoDescription" class="form-textarea" placeholder="请详细描述信息的内容和价值" required></textarea>
+                            <div class="error-message" id="infoDescriptionError">请输入信息描述</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infoContent" class="form-label">信息内容 *</label>
+                            <textarea id="infoContent" class="form-textarea" placeholder="请输入详细的信息内容" required style="min-height: 200px;"></textarea>
+                            <div class="error-message" id="infoContentError">请输入信息内容</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infoUrl" class="form-label">相关链接（选填）</label>
+                            <input type="url" id="infoUrl" class="form-input" placeholder="请输入相关链接（http:// 或 https://）">
+                            <div class="error-message" id="infoUrlError">请输入有效的链接</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infoGrade" class="form-label">适用年级</label>
+                            <select id="infoGrade" class="form-select">
+                                <option value="all">全部年级</option>
+                                <option value="freshman">大一</option>
+                                <option value="sophomore">大二</option>
+                                <option value="junior">大三</option>
+                                <option value="senior">大四</option>
+                                <option value="graduate">研究生</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="infoTags" class="form-label">标签（用逗号分隔）</label>
+                            <input type="text" id="infoTags" class="form-input" placeholder="例如：学习,资讯,竞赛">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">是否免费</label>
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="infoFree" checked>
+                                <label for="infoFree">是，免费信息</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 共同字段 -->
                     <div class="form-group">
                         <label for="userName" class="form-label">你的姓名（选填）</label>
                         <input type="text" id="userName" class="form-input" placeholder="请输入你的姓名">
@@ -295,6 +399,32 @@
     <!-- JavaScript文件 -->
     <script src="js/main.js"></script>
     <script>
+        // 标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.form-tab');
+            const contents = document.querySelectorAll('.form-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新标签状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新内容显示
+                    contents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.getAttribute('data-tab') === tabId) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            initAllAnimations();
+        });
+        
         // 表单验证和提交处理
         function handleSubmit(event) {
             event.preventDefault();
@@ -307,39 +437,76 @@
                 return false;
             }
             
-            // 获取表单数据
-            const formData = {
-                title: document.getElementById('resourceTitle').value,
-                url: document.getElementById('resourceUrl').value,
-                category: document.getElementById('resourceCategory').value,
-                description: document.getElementById('resourceDescription').value,
-                grade: document.getElementById('resourceGrade').value,
-                tags: document.getElementById('resourceTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
-                free: document.getElementById('resourceFree').checked,
-                userName: document.getElementById('userName').value,
-                userEmail: document.getElementById('userEmail').value
-            };
+            // 获取当前激活的标签
+            const activeTab = document.querySelector('.form-tab.active').getAttribute('data-tab');
+            let formData = {};
+            let newResource = {};
+            
+            if (activeTab === 'website') {
+                // 网站类资源
+                formData = {
+                    title: document.getElementById('resourceTitle').value,
+                    url: document.getElementById('resourceUrl').value,
+                    category: 'website',
+                    description: document.getElementById('resourceDescription').value,
+                    grade: document.getElementById('resourceGrade').value,
+                    tags: document.getElementById('resourceTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    free: document.getElementById('resourceFree').checked,
+                    userName: document.getElementById('userName').value,
+                    userEmail: document.getElementById('userEmail').value
+                };
+                
+                newResource = {
+                    id: Date.now(),
+                    title: formData.title,
+                    description: formData.description,
+                    url: formData.url,
+                    category: formData.category,
+                    grade: formData.grade,
+                    free: formData.free,
+                    tags: formData.tags,
+                    submitter: UserManager.getCurrentUser() ? UserManager.getCurrentUser().username : formData.userName,
+                    submittedAt: new Date().toISOString()
+                };
+            } else {
+                // 信息类资源
+                formData = {
+                    title: document.getElementById('infoTitle').value,
+                    url: document.getElementById('infoUrl').value,
+                    category: 'information',
+                    description: document.getElementById('infoDescription').value,
+                    content: document.getElementById('infoContent').value,
+                    grade: document.getElementById('infoGrade').value,
+                    tags: document.getElementById('infoTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    free: document.getElementById('infoFree').checked,
+                    userName: document.getElementById('userName').value,
+                    userEmail: document.getElementById('userEmail').value
+                };
+                
+                newResource = {
+                    id: Date.now(),
+                    title: formData.title,
+                    description: formData.description,
+                    content: formData.content,
+                    url: formData.url,
+                    category: formData.category,
+                    grade: formData.grade,
+                    free: formData.free,
+                    tags: formData.tags,
+                    submitter: UserManager.getCurrentUser() ? UserManager.getCurrentUser().username : formData.userName,
+                    submittedAt: new Date().toISOString()
+                };
+            }
             
             // 检查用户是否登录，给予积分奖励
             const currentUser = UserManager.getCurrentUser();
             
             // 保存到待审核列表
             const pendingResources = JSON.parse(localStorage.getItem('pendingResources') || '[]');
-            const newResource = {
-                id: pendingResources.length + 1,
-                title: formData.title,
-                description: formData.description,
-                url: formData.url,
-                category: formData.category,
-                grade: formData.grade,
-                free: formData.free,
-                tags: formData.tags,
-                submitter: currentUser ? currentUser.username : formData.userName,
-                submittedAt: new Date().toISOString()
-            };
             pendingResources.push(newResource);
             localStorage.setItem('pendingResources', JSON.stringify(pendingResources));
             console.log('资源已添加到待审核列表:', newResource);
+            
             if (currentUser) {
                 // 给用户添加积分
                 const updatedUser = PointsManager.addPoints(currentUser.username, PointsManager.pointConfig.submitResource, 'submitResource');
@@ -379,35 +546,56 @@
         function validateForm() {
             let isValid = true;
             
-            // 验证标题
-            const title = document.getElementById('resourceTitle');
-            if (!title.value.trim()) {
-                showError(title, 'resourceTitleError', '请输入资源标题');
-                isValid = false;
-            }
+            // 获取当前激活的标签
+            const activeTab = document.querySelector('.form-tab.active').getAttribute('data-tab');
             
-            // 验证链接
-            const url = document.getElementById('resourceUrl');
-            if (!url.value.trim()) {
-                showError(url, 'resourceUrlError', '请输入资源链接');
-                isValid = false;
-            } else if (!isValidUrl(url.value)) {
-                showError(url, 'resourceUrlError', '请输入有效的资源链接');
-                isValid = false;
-            }
-            
-            // 验证分类
-            const category = document.getElementById('resourceCategory');
-            if (!category.value) {
-                showError(category, 'resourceCategoryError', '请选择资源分类');
-                isValid = false;
-            }
-            
-            // 验证描述
-            const description = document.getElementById('resourceDescription');
-            if (!description.value.trim()) {
-                showError(description, 'resourceDescriptionError', '请输入资源描述');
-                isValid = false;
+            if (activeTab === 'website') {
+                // 验证网站类表单
+                const title = document.getElementById('resourceTitle');
+                if (!title.value.trim()) {
+                    showError(title, 'resourceTitleError', '请输入资源标题');
+                    isValid = false;
+                }
+                
+                const url = document.getElementById('resourceUrl');
+                if (!url.value.trim()) {
+                    showError(url, 'resourceUrlError', '请输入资源链接');
+                    isValid = false;
+                } else if (!isValidUrl(url.value)) {
+                    showError(url, 'resourceUrlError', '请输入有效的资源链接');
+                    isValid = false;
+                }
+                
+                const description = document.getElementById('resourceDescription');
+                if (!description.value.trim()) {
+                    showError(description, 'resourceDescriptionError', '请输入资源描述');
+                    isValid = false;
+                }
+            } else {
+                // 验证信息类表单
+                const title = document.getElementById('infoTitle');
+                if (!title.value.trim()) {
+                    showError(title, 'infoTitleError', '请输入信息标题');
+                    isValid = false;
+                }
+                
+                const description = document.getElementById('infoDescription');
+                if (!description.value.trim()) {
+                    showError(description, 'infoDescriptionError', '请输入信息描述');
+                    isValid = false;
+                }
+                
+                const content = document.getElementById('infoContent');
+                if (!content.value.trim()) {
+                    showError(content, 'infoContentError', '请输入信息内容');
+                    isValid = false;
+                }
+                
+                const url = document.getElementById('infoUrl');
+                if (url.value.trim() && !isValidUrl(url.value)) {
+                    showError(url, 'infoUrlError', '请输入有效的链接');
+                    isValid = false;
+                }
             }
             
             return isValid;
@@ -443,11 +631,6 @@
                 return false;
             }
         }
-        
-        // 初始化动画
-        document.addEventListener('DOMContentLoaded', function() {
-            initAllAnimations();
-        });
     </script>
 </body>
 </html>
