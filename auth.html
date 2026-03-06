@@ -435,87 +435,115 @@
             
             // 登录表单提交
             const loginForm = document.getElementById('login-form');
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // 表单验证
-                if (validateLoginForm()) {
-                    // 模拟登录
-                    const email = document.getElementById('login-email').value;
-                    const password = document.getElementById('login-password').value;
-                    const rememberMe = document.getElementById('remember-me').checked;
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     
-                    // 检查用户是否存在
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const user = users.find(u => u.email === email && u.password === password);
-                    
-                    if (user) {
-                        // 登录成功
-                        localStorage.setItem('currentUser', JSON.stringify(user));
-                        
-                        // 初始化用户积分
-                        PointsManager.initUserPoints(user.username);
-                        // 领取每日登录积分
-                        PointsManager.claimDailyLoginPoints(user.username);
-                        
-                        // 显示成功消息
-                        alert('登录成功！');
-                        
-                        // 跳转到首页
-                        window.location.href = 'index.html';
-                    } else {
-                        // 登录失败
-                        document.getElementById('login-email-error').textContent = '邮箱或密码错误';
+                    try {
+                        // 表单验证
+                        if (validateLoginForm()) {
+                            // 模拟登录
+                            const email = document.getElementById('login-email').value;
+                            const password = document.getElementById('login-password').value;
+                            const rememberMe = document.getElementById('remember-me').checked;
+                            
+                            // 检查用户是否存在
+                            const users = JSON.parse(localStorage.getItem('users') || '[]');
+                            const user = users.find(u => u.email === email && u.password === password);
+                            
+                            if (user) {
+                                try {
+                                    // 登录成功
+                                    localStorage.setItem('currentUser', JSON.stringify(user));
+                                    
+                                    // 初始化用户积分
+                                    if (typeof PointsManager !== 'undefined') {
+                                        PointsManager.initUserPoints(user.username);
+                                        // 领取每日登录积分
+                                        PointsManager.claimDailyLoginPoints(user.username);
+                                    }
+                                    
+                                    // 显示成功消息
+                                    alert('登录成功！');
+                                    
+                                    // 跳转到首页
+                                    window.location.href = 'index.html';
+                                } catch (storageError) {
+                                    console.error('登录存储失败:', storageError);
+                                    alert('登录失败，请刷新页面重试');
+                                }
+                            } else {
+                                // 登录失败
+                                document.getElementById('login-email-error').textContent = '邮箱或密码错误';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('登录处理失败:', error);
+                        alert('登录过程中出现错误，请重试');
                     }
-                }
-            });
+                });
+            }
             
             // 注册表单提交
             const registerForm = document.getElementById('register-form');
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // 表单验证
-                if (validateRegisterForm()) {
-                    // 模拟注册
-                    const username = document.getElementById('register-username').value;
-                    const email = document.getElementById('register-email').value;
-                    const password = document.getElementById('register-password').value;
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     
-                    // 检查用户是否已存在
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const existingUser = users.find(u => u.email === email);
-                    
-                    if (existingUser) {
-                        document.getElementById('register-email-error').textContent = '该邮箱已被注册';
-                    } else {
-                        // 创建新用户
-                        const newUser = {
-                            id: Date.now(),
-                            username: username,
-                            email: email,
-                            password: password,
-                            createdAt: new Date().toISOString()
-                        };
-                        
-                        // 保存用户
-                        users.push(newUser);
-                        localStorage.setItem('users', JSON.stringify(users));
-                        localStorage.setItem('currentUser', JSON.stringify(newUser));
-                        
-                        // 初始化用户积分
-                        PointsManager.initUserPoints(newUser.username);
-                        // 领取每日登录积分
-                        PointsManager.claimDailyLoginPoints(newUser.username);
-                        
-                        // 显示成功消息
-                        alert('注册成功！');
-                        
-                        // 跳转到首页
-                        window.location.href = 'index.html';
+                    try {
+                        // 表单验证
+                        if (validateRegisterForm()) {
+                            // 模拟注册
+                            const username = document.getElementById('register-username').value;
+                            const email = document.getElementById('register-email').value;
+                            const password = document.getElementById('register-password').value;
+                            
+                            // 检查用户是否已存在
+                            const users = JSON.parse(localStorage.getItem('users') || '[]');
+                            const existingUser = users.find(u => u.email === email);
+                            
+                            if (existingUser) {
+                                document.getElementById('register-email-error').textContent = '该邮箱已被注册';
+                            } else {
+                                try {
+                                    // 创建新用户
+                                    const newUser = {
+                                        id: Date.now(),
+                                        username: username,
+                                        email: email,
+                                        password: password,
+                                        createdAt: new Date().toISOString()
+                                    };
+                                    
+                                    // 保存用户
+                                    users.push(newUser);
+                                    localStorage.setItem('users', JSON.stringify(users));
+                                    localStorage.setItem('currentUser', JSON.stringify(newUser));
+                                    
+                                    // 初始化用户积分
+                                    if (typeof PointsManager !== 'undefined') {
+                                        PointsManager.initUserPoints(newUser.username);
+                                        // 领取每日登录积分
+                                        PointsManager.claimDailyLoginPoints(newUser.username);
+                                    }
+                                    
+                                    // 显示成功消息
+                                    alert('注册成功！');
+                                    
+                                    // 跳转到首页
+                                    window.location.href = 'index.html';
+                                } catch (storageError) {
+                                    console.error('注册存储失败:', storageError);
+                                    alert('注册失败，请刷新页面重试');
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('注册处理失败:', error);
+                        alert('注册过程中出现错误，请重试');
                     }
-                }
-            });
+                });
+            }
             
             // 登录表单验证
             function validateLoginForm() {

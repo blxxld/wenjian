@@ -255,10 +255,52 @@
     </style>
 </head>
 <body>
-    <!-- 预加载动画 -->
-    <div class="preloader" id="preloader">
-        <div class="preloader-spinner"></div>
-    </div>
+    <script>
+        // 立即移除预加载器元素，并且阻止任何JavaScript代码创建新的预加载器元素
+        (function() {
+            // 立即移除预加载器元素
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.remove();
+            }
+            
+            // 重写document.getElementById方法，当尝试获取preloader元素时返回null
+            const originalGetElementById = document.getElementById;
+            document.getElementById = function(id) {
+                if (id === 'preloader') {
+                    return null;
+                }
+                return originalGetElementById.call(document, id);
+            };
+            
+            // 重写document.createElement方法，当尝试创建preloader元素时返回一个空元素
+            const originalCreateElement = document.createElement;
+            document.createElement = function(tag) {
+                if (tag === 'div') {
+                    const element = originalCreateElement.call(document, tag);
+                    // 监听元素的className属性设置
+                    Object.defineProperty(element, 'className', {
+                        set: function(value) {
+                            if (value.includes('preloader')) {
+                                // 如果尝试创建preloader元素，立即移除它
+                                setTimeout(() => {
+                                    if (element.parentNode) {
+                                        element.parentNode.removeChild(element);
+                                    }
+                                }, 0);
+                            }
+                            this._className = value;
+                        },
+                        get: function() {
+                            return this._className || '';
+                        }
+                    });
+                    return element;
+                }
+                return originalCreateElement.call(document, tag);
+            };
+        })();
+    </script>
     
     <!-- 导航栏 -->
     <nav class="navbar">

@@ -185,143 +185,180 @@ const PointsManager = {
 const UserManager = {
     // 获取当前用户
     getCurrentUser() {
-        return StorageUtil.get('currentUser', null);
+        try {
+            return StorageUtil.get('currentUser', null);
+        } catch (error) {
+            console.error('获取当前用户失败:', error);
+            return null;
+        }
     },
     
     // 检查用户是否已登录
     isLoggedIn() {
-        return this.getCurrentUser() !== null;
+        try {
+            return this.getCurrentUser() !== null;
+        } catch (error) {
+            console.error('检查登录状态失败:', error);
+            return false;
+        }
     },
     
     // 检查用户是否为管理员
     isAdmin() {
-        const user = this.getCurrentUser();
-        return user && user.role === 'admin';
+        try {
+            const user = this.getCurrentUser();
+            return user && user.role === 'admin';
+        } catch (error) {
+            console.error('检查管理员状态失败:', error);
+            return false;
+        }
     },
     
     // 登出用户
     logout() {
-        StorageUtil.remove('currentUser');
-        this.updateUserMenu();
-        window.location.href = 'index.html';
+        try {
+            StorageUtil.remove('currentUser');
+            this.updateUserMenu();
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('登出失败:', error);
+        }
     },
     
     // 更新用户菜单
     updateUserMenu() {
-        const userMenu = DOMUtil.$('#user-menu');
-        if (!userMenu) return;
-        
-        if (this.isLoggedIn()) {
-            const user = this.getCurrentUser();
-            const userPoints = PointsManager.getUserPoints(user.username);
+        try {
+            const userMenu = DOMUtil.$('#user-menu');
+            if (!userMenu) return;
             
-            // 构建菜单内容
-            let menuContent = `
-                <div class="user-dropdown">
-                    <a href="#" class="user-profile">
-                        <i class="fas fa-user-circle"></i> ${user.username}
-                        <span class="user-points">${userPoints.points} 积分</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item"><i class="fas fa-user"></i> 个人中心</a>
-                        <a href="ranking.html" class="dropdown-item"><i class="fas fa-trophy"></i> 积分排行榜</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-heart"></i> 我的收藏</a>
-                        <a href="ai-assistant.html" class="dropdown-item"><i class="fas fa-robot"></i> AI助手</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> 设置</a>
-            `
-            
-            // 如果是管理员，添加管理员菜单
-            if (this.isAdmin()) {
-                menuContent += `
-                        <div class="dropdown-divider"></div>
-                        <a href="admin.html" class="dropdown-item"><i class="fas fa-shield-alt"></i> 管理后台</a>
-                `;
-            }
-            
-            menuContent += `
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item logout-btn"><i class="fas fa-sign-out-alt"></i> 登出</a>
-                    </div>
-                </div>
-            `;
-            
-            userMenu.innerHTML = menuContent;
-            
-            // 绑定登出按钮事件
-            const logoutBtn = userMenu.querySelector('.logout-btn');
-            if (logoutBtn) {
-                DOMUtil.on(logoutBtn, 'click', (e) => {
-                    e.preventDefault();
-                    this.logout();
-                });
-            }
-            
-            // 绑定个人中心按钮事件
-            const profileLink = userMenu.querySelector('.dropdown-item:nth-child(1)');
-            if (profileLink) {
-                DOMUtil.on(profileLink, 'click', (e) => {
-                    e.preventDefault();
-                    window.location.href = 'profile.html';
-                });
-            }
-            
-            // 绑定我的收藏按钮事件
-            const favoritesLink = userMenu.querySelector('.dropdown-item:nth-child(3)');
-            if (favoritesLink) {
-                DOMUtil.on(favoritesLink, 'click', (e) => {
-                    e.preventDefault();
-                    window.location.href = 'profile.html#favorites';
-                });
-            }
-            
-            // 绑定下拉菜单事件
-            const userProfile = userMenu.querySelector('.user-profile');
-            const dropdownMenu = userMenu.querySelector('.dropdown-menu');
-            
-            if (userProfile && dropdownMenu) {
-                DOMUtil.on(userProfile, 'click', (e) => {
-                    e.preventDefault();
-                    dropdownMenu.classList.toggle('active');
-                });
+            if (this.isLoggedIn()) {
+                const user = this.getCurrentUser();
+                if (!user) {
+                    userMenu.innerHTML = '<a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>';
+                    return;
+                }
                 
-                // 点击其他区域关闭下拉菜单
-                DOMUtil.on(document, 'click', (e) => {
-                    if (!userMenu.contains(e.target)) {
-                        dropdownMenu.classList.remove('active');
-                    }
-                });
+                let userPoints = { points: 0 };
+                try {
+                    userPoints = PointsManager.getUserPoints(user.username);
+                } catch (error) {
+                    console.error('获取用户积分失败:', error);
+                }
+                
+                // 构建菜单内容
+                let menuContent = `
+                    <div class="user-dropdown">
+                        <a href="#" class="user-profile">
+                            <i class="fas fa-user-circle"></i> ${user.username}
+                            <span class="user-points">${userPoints.points || 0} 积分</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item"><i class="fas fa-user"></i> 个人中心</a>
+                            <a href="ranking.html" class="dropdown-item"><i class="fas fa-trophy"></i> 积分排行榜</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-heart"></i> 我的收藏</a>
+                            <a href="ai-assistant.html" class="dropdown-item"><i class="fas fa-robot"></i> AI助手</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> 设置</a>
+                `
+                
+                // 如果是管理员，添加管理员菜单
+                if (this.isAdmin()) {
+                    menuContent += `
+                            <div class="dropdown-divider"></div>
+                            <a href="admin.html" class="dropdown-item"><i class="fas fa-shield-alt"></i> 管理后台</a>
+                    `;
+                }
+                
+                menuContent += `
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item logout-btn"><i class="fas fa-sign-out-alt"></i> 登出</a>
+                        </div>
+                    </div>
+                `;
+                
+                userMenu.innerHTML = menuContent;
+                
+                // 绑定登出按钮事件
+                const logoutBtn = userMenu.querySelector('.logout-btn');
+                if (logoutBtn) {
+                    DOMUtil.on(logoutBtn, 'click', (e) => {
+                        e.preventDefault();
+                        this.logout();
+                    });
+                }
+                
+                // 绑定个人中心按钮事件
+                const profileLink = userMenu.querySelector('.dropdown-item:nth-child(1)');
+                if (profileLink) {
+                    DOMUtil.on(profileLink, 'click', (e) => {
+                        e.preventDefault();
+                        window.location.href = 'profile.html';
+                    });
+                }
+                
+                // 绑定我的收藏按钮事件
+                const favoritesLink = userMenu.querySelector('.dropdown-item:nth-child(3)');
+                if (favoritesLink) {
+                    DOMUtil.on(favoritesLink, 'click', (e) => {
+                        e.preventDefault();
+                        window.location.href = 'profile.html#favorites';
+                    });
+                }
+                
+                // 绑定下拉菜单事件
+                const userProfile = userMenu.querySelector('.user-profile');
+                const dropdownMenu = userMenu.querySelector('.dropdown-menu');
+                
+                if (userProfile && dropdownMenu) {
+                    DOMUtil.on(userProfile, 'click', (e) => {
+                        e.preventDefault();
+                        dropdownMenu.classList.toggle('active');
+                    });
+                    
+                    // 点击其他区域关闭下拉菜单
+                    DOMUtil.on(document, 'click', (e) => {
+                        if (!userMenu.contains(e.target)) {
+                            dropdownMenu.classList.remove('active');
+                        }
+                    });
+                }
+            } else {
+                userMenu.innerHTML = '<a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>';
             }
-        } else {
-            userMenu.innerHTML = '<a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>';
+        } catch (error) {
+            console.error('更新用户菜单失败:', error);
         }
     },
     
     // 确保管理员账户存在
     ensureAdminAccount() {
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        
-        // 检查是否已有管理员账户
-        const existingAdmin = users.find(user => user.role === 'admin');
-        if (existingAdmin) {
-            return;
+        try {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // 检查是否已有管理员账户
+            const existingAdmin = users.find(user => user.role === 'admin');
+            if (existingAdmin) {
+                return;
+            }
+            
+            // 创建管理员账户
+            const adminUser = {
+                id: Date.now(),
+                username: 'admin',
+                email: 'admin@example.com',
+                password: 'admin123',
+                role: 'admin',
+                createdAt: new Date().toISOString()
+            };
+            
+            // 添加到用户列表
+            users.push(adminUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            console.log('管理员账户已创建：', adminUser.username);
+        } catch (error) {
+            console.error('确保管理员账户存在失败:', error);
         }
-        
-        // 创建管理员账户
-        const adminUser = {
-            id: Date.now(),
-            username: 'admin',
-            email: 'admin@example.com',
-            password: 'admin123',
-            role: 'admin',
-            createdAt: new Date().toISOString()
-        };
-        
-        // 添加到用户列表
-        users.push(adminUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        console.log('管理员账户已创建：', adminUser.username);
     }
 };
 
@@ -467,23 +504,16 @@ async function initPage() {
         if (preloader) {
             console.log('隐藏预加载动画');
             preloader.classList.add('hidden');
+            preloader.style.display = 'none';
         }
     } catch (error) {
         console.error('隐藏预加载动画失败:', error);
     }
 }
 
-// 预加载动画功能
+// 预加载动画功能 (已移除)
 function initPreloader() {
-    const preloader = document.getElementById('preloader');
-    if (!preloader) return;
-    
-    // 页面加载完成后隐藏预加载动画
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            preloader.classList.add('hidden');
-        }, 500);
-    });
+    // 预加载器已移除，不再需要初始化
 }
 
 // 滚动到顶部按钮功能
@@ -509,8 +539,45 @@ function initScrollToTop() {
     });
 }
 
+// 移除预加载器元素
+function removePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.remove();
+        console.log('预加载器已移除');
+    }
+}
+
+// 定期检查并移除preloader元素
+function checkAndRemovePreloader() {
+    // 立即执行一次
+    removePreloader();
+    
+    // 每500毫秒检查一次，持续3秒
+    let count = 0;
+    const interval = setInterval(() => {
+        removePreloader();
+        count++;
+        if (count >= 6) {
+            clearInterval(interval);
+            console.log('预加载器检查完成');
+        }
+    }, 500);
+}
+
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
+    // 立即移除preloader元素
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.remove();
+        console.log('Preloader removed on DOMContentLoaded');
+    }
+    
+    // 定期检查并移除preloader元素
+    checkAndRemovePreloader();
+    
+    // 初始化其他功能
     initPreloader();
     initPage();
     initScrollToTop();

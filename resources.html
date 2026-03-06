@@ -15,30 +15,7 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <!-- 预加载动画 -->
-    <div class="preloader" id="preloader">
-        <div class="preloader-spinner"></div>
-    </div>
-    
-    <script>
-        // 页面加载完成后隐藏预加载动画
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                if (preloader) {
-                    preloader.classList.add('hidden');
-                }
-            }, 500);
-        });
-        
-        // 立即执行的代码，确保预加载动画能够隐藏
-        setTimeout(() => {
-            const preloader = document.getElementById('preloader');
-            if (preloader) {
-                preloader.classList.add('hidden');
-            }
-        }, 2000);
-    </script>
+
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">

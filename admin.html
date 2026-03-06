@@ -564,75 +564,104 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             // 检查是否为管理员
-            if (!UserManager.isAdmin()) {
-                alert('您没有管理员权限');
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            // 更新管理员名称
-            const user = UserManager.getCurrentUser();
-            if (user) {
-                document.getElementById('admin-username').textContent = user.username;
-            }
-            
-            // 标签切换
-            const navItems = document.querySelectorAll('.admin-nav-item');
-            const tabs = ['resources-tab', 'add-resource-tab', 'users-tab'];
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // 移除所有活动状态
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    tabs.forEach(tab => document.getElementById(tab).style.display = 'none');
-                    
-                    // 添加活动状态
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).style.display = 'block';
-                    
-                    // 更新标题
-                    document.querySelector('.admin-header h1').textContent = this.querySelector('span').textContent;
-                });
-            });
-            
-            // 添加资源表单标签切换
-            const formTabs = document.querySelectorAll('.form-tab');
-            const formContents = document.querySelectorAll('.form-content');
-            
-            formTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // 更新标签状态
-                    formTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 更新内容显示
-                    formContents.forEach(content => {
-                        content.classList.remove('active');
-                        if (content.getAttribute('data-tab') === tabId) {
-                            content.classList.add('active');
+            try {
+                if (!UserManager.isAdmin()) {
+                    alert('您没有管理员权限');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // 更新管理员名称
+                const user = UserManager.getCurrentUser();
+                if (user && document.getElementById('admin-username')) {
+                    document.getElementById('admin-username').textContent = user.username;
+                }
+                
+                // 标签切换
+                const navItems = document.querySelectorAll('.admin-nav-item');
+                const tabs = ['resources-tab', 'add-resource-tab', 'users-tab'];
+                
+                if (navItems.length > 0) {
+                    navItems.forEach(item => {
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            
+                            // 移除所有活动状态
+                            navItems.forEach(nav => nav.classList.remove('active'));
+                            tabs.forEach(tab => {
+                                const tabElement = document.getElementById(tab);
+                                if (tabElement) {
+                                    tabElement.style.display = 'none';
+                                }
+                            });
+                            
+                            // 添加活动状态
+                            this.classList.add('active');
+                            const tabId = this.getAttribute('data-tab') + '-tab';
+                            const targetTab = document.getElementById(tabId);
+                            if (targetTab) {
+                                targetTab.style.display = 'block';
+                            }
+                            
+                            // 更新标题
+                            const headerTitle = document.querySelector('.admin-header h1');
+                            if (headerTitle && this.querySelector('span')) {
+                                headerTitle.textContent = this.querySelector('span').textContent;
+                            }
+                        });
+                    });
+                }
+                
+                // 添加资源表单标签切换
+                const formTabs = document.querySelectorAll('.form-tab');
+                const formContents = document.querySelectorAll('.form-content');
+                
+                if (formTabs.length > 0) {
+                    formTabs.forEach(tab => {
+                        tab.addEventListener('click', function() {
+                            const tabId = this.getAttribute('data-tab');
+                            
+                            // 更新标签状态
+                            formTabs.forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                            
+                            // 更新内容显示
+                            formContents.forEach(content => {
+                                content.classList.remove('active');
+                                if (content.getAttribute('data-tab') === tabId) {
+                                    content.classList.add('active');
+                                }
+                            });
+                        });
+                    });
+                }
+                
+                // 加载待审核资源
+                loadPendingResources();
+                
+                // 加载用户列表
+                loadUsers();
+                
+                // 刷新按钮事件
+                const refreshBtn = document.getElementById('refresh-resources');
+                if (refreshBtn) {
+                    refreshBtn.addEventListener('click', loadPendingResources);
+                }
+                
+                // 重置表单按钮事件
+                const resetBtn = document.getElementById('reset-form');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', function() {
+                        const form = document.getElementById('addResourceForm');
+                        if (form) {
+                            form.reset();
                         }
                     });
-                });
-            });
-            
-            // 加载待审核资源
-            loadPendingResources();
-            
-            // 加载用户列表
-            loadUsers();
-            
-            // 刷新按钮事件
-            document.getElementById('refresh-resources').addEventListener('click', loadPendingResources);
-            
-            // 重置表单按钮事件
-            document.getElementById('reset-form').addEventListener('click', function() {
-                document.getElementById('addResourceForm').reset();
-            });
+                }
+            } catch (error) {
+                console.error('后台页面初始化失败:', error);
+                // 即使出错也不阻止页面加载
+            }
         });
         
         // 处理添加资源
