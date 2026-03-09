@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充值中心 - 问茧</title>
+    <meta name="description" content="问茧充值中心，通过微信或支付宝购买积分">
+    <meta name="keywords" content="充值,积分购买,微信支付,支付宝支付">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .recharge-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+            backdrop-filter: blur(10px);
+            background: linear-gradient(10deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 100%);
+        }
+        
+        .recharge-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .recharge-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .recharge-header p {
+            color: var(--gray-color);
+            font-size: 1.1rem;
+        }
+        
+        .recharge-amounts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .amount-card {
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .amount-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .amount-card.active {
+            border-color: var(--primary-color);
+            background: rgba(58, 134, 255, 0.05);
+        }
+        
+        .amount-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .amount-points {
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .amount-desc {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .custom-amount {
+            margin-bottom: 3rem;
+        }
+        
+        .custom-amount h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .custom-amount input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        .custom-amount input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+        }
+        
+        .payment-methods {
+            margin-bottom: 3rem;
+        }
+        
+        .payment-methods h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .payment-options {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .payment-option {
+            flex: 1;
+            min-width: 200px;
+            background: var(--light-gray);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .payment-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-option.active {
+            border-color: var(--primary-color);
+            background: rgba(58, 134, 255, 0.05);
+        }
+        
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .wechat {
+            color: #07C160;
+        }
+        
+        .alipay {
+            color: #1677FF;
+        }
+        
+        .payment-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .recharge-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .recharge-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .recharge-btn:disabled {
+            background: var(--gray-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .success-message {
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .error-message {
+            color: var(--warning-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .recharge-container {
+                padding: 2rem;
+            }
+            
+            .recharge-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .payment-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">充值中心</h1>
+            <p class="page-subtitle">通过微信或支付宝购买积分</p>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <section class="section">
+            <div class="recharge-container animate-on-scroll">
+                <!-- 成功消息 -->
+                <div class="success-message" id="successMessage">
+                    <h3><i class="fas fa-check-circle"></i> 充值成功！</h3>
+                    <p>你的积分已成功到账，感谢你的支持！</p>
+                </div>
+
+                <!-- 充值金额选择 -->
+                <div class="recharge-header">
+                    <h2>选择充值金额</h2>
+                    <p>1元 = 10积分</p>
+                </div>
+
+                <div class="recharge-amounts">
+                    <div class="amount-card" data-amount="1" data-points="10">
+                        <div class="amount-price">￥1</div>
+                        <div class="amount-points">10积分</div>
+                        <div class="amount-desc">基础套餐</div>
+                    </div>
+                    <div class="amount-card" data-amount="5" data-points="50">
+                        <div class="amount-price">￥5</div>
+                        <div class="amount-points">50积分</div>
+                        <div class="amount-desc">经济套餐</div>
+                    </div>
+                    <div class="amount-card" data-amount="10" data-points="100">
+                        <div class="amount-price">￥10</div>
+                        <div class="amount-points">100积分</div>
+                        <div class="amount-desc">标准套餐</div>
+                    </div>
+                    <div class="amount-card" data-amount="20" data-points="200">
+                        <div class="amount-price">￥20</div>
+                        <div class="amount-points">200积分</div>
+                        <div class="amount-desc">高级套餐</div>
+                    </div>
+                    <div class="amount-card" data-amount="50" data-points="500">
+                        <div class="amount-price">￥50</div>
+                        <div class="amount-points">500积分</div>
+                        <div class="amount-desc">豪华套餐</div>
+                    </div>
+                    <div class="amount-card" data-amount="100" data-points="1000">
+                        <div class="amount-price">￥100</div>
+                        <div class="amount-points">1000积分</div>
+                        <div class="amount-desc">至尊套餐</div>
+                    </div>
+                </div>
+
+                <!-- 自定义金额 -->
+                <div class="custom-amount">
+                    <h3>自定义金额</h3>
+                    <input type="number" id="customAmount" placeholder="请输入金额（元）" min="1" step="1">
+                    <div class="error-message" id="customAmountError">请输入有效的金额</div>
+                </div>
+
+                <!-- 支付方式选择 -->
+                <div class="payment-methods">
+                    <h3>选择支付方式</h3>
+                    <div class="payment-options">
+                        <div class="payment-option active" data-method="wechat">
+                            <div class="payment-icon wechat">
+                                <i class="fab fa-weixin"></i>
+                            </div>
+                            <div class="payment-name">微信支付</div>
+                        </div>
+                        <div class="payment-option" data-method="alipay">
+                            <div class="payment-icon alipay">
+                                <i class="fab fa-alipay"></i>
+                            </div>
+                            <div class="payment-name">支付宝</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 充值按钮 -->
+                <button class="recharge-btn" id="rechargeBtn">
+                    <i class="fas fa-money-bill-wave"></i> 立即充值
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=website"><i class="fas fa-globe"></i> 网站类</a></li>
+                    <li><a href="resources.html?category=information"><i class="fas fa-newspaper"></i> 信息类</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initAllAnimations();
+            
+            // 检查用户是否登录
+            if (!UserManager.isLoggedIn()) {
+                alert('请先登录后再进行充值');
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // 更新用户菜单
+            UserManager.updateUserMenu();
+            
+            // 充值金额选择
+            const amountCards = document.querySelectorAll('.amount-card');
+            let selectedAmount = 1;
+            let selectedPoints = 10;
+            
+            amountCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 移除所有卡片的活跃状态
+                    amountCards.forEach(c => c.classList.remove('active'));
+                    // 添加当前卡片的活跃状态
+                    this.classList.add('active');
+                    // 更新选中的金额和积分
+                    selectedAmount = parseFloat(this.getAttribute('data-amount'));
+                    selectedPoints = parseInt(this.getAttribute('data-points'));
+                    // 清空自定义金额
+                    document.getElementById('customAmount').value = '';
+                    // 隐藏错误消息
+                    document.getElementById('customAmountError').classList.remove('show');
+                });
+            });
+            
+            // 自定义金额输入
+            const customAmountInput = document.getElementById('customAmount');
+            customAmountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value);
+                if (!isNaN(amount) && amount >= 1) {
+                    // 移除所有卡片的活跃状态
+                    amountCards.forEach(c => c.classList.remove('active'));
+                    // 更新选中的金额和积分
+                    selectedAmount = amount;
+                    selectedPoints = Math.floor(amount * 10);
+                    // 隐藏错误消息
+                    document.getElementById('customAmountError').classList.remove('show');
+                }
+            });
+            
+            // 支付方式选择
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            let selectedPayment = 'wechat';
+            
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选项的活跃状态
+                    paymentOptions.forEach(o => o.classList.remove('active'));
+                    // 添加当前选项的活跃状态
+                    this.classList.add('active');
+                    // 更新选中的支付方式
+                    selectedPayment = this.getAttribute('data-method');
+                });
+            });
+            
+            // 充值按钮点击事件
+            document.getElementById('rechargeBtn').addEventListener('click', function() {
+                // 验证金额
+                if (isNaN(selectedAmount) || selectedAmount < 1) {
+                    document.getElementById('customAmountError').classList.add('show');
+                    return;
+                }
+                
+                // 模拟支付过程
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 处理中...';
+                
+                // 模拟支付成功
+                setTimeout(() => {
+                    // 给用户添加积分
+                    const currentUser = UserManager.getCurrentUser();
+                    if (currentUser) {
+                        PointsManager.addPoints(currentUser.username, selectedPoints, 'recharge');
+                        
+                        // 显示成功消息
+                        document.getElementById('successMessage').classList.add('show');
+                        
+                        // 3秒后隐藏成功消息并跳转到个人中心
+                        setTimeout(() => {
+                            document.getElementById('successMessage').classList.remove('show');
+                            // 这里可以跳转到个人中心页面
+                            alert(`充值成功！你已获得 ${selectedPoints} 积分`);
+                        }, 3000);
+                    }
+                    
+                    // 恢复按钮状态
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-money-bill-wave"></i> 立即充值';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

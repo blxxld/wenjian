@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问卷社区 - 问茧</title>
+    <meta name="description" content="问茧问卷社区，帮助大学生收集问卷数据，连接问卷发布者和参与者">
+    <meta name="keywords" content="问卷社区,问卷发布,数据收集,大学生问卷">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .questionnaire-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        .questionnaire-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .questionnaire-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .questionnaire-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .questionnaire-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+        
+        .questionnaire-reward {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .questionnaire-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .questionnaire-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .stat-item i {
+            color: var(--primary-color);
+        }
+        
+        .questionnaire-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-color);
+            transform: translateY(-2px);
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .filter-content {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .filter-item:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .filter-item.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            color: var(--gray-color);
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .questionnaire-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .questionnaire-stats {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .questionnaire-actions {
+                flex-direction: column;
+            }
+            
+            .filter-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="questionnaire.html" class="active"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">问卷社区</h1>
+            <p class="page-subtitle">连接问卷发布者和参与者，高效收集数据</p>
+            <div class="search-box animate-on-scroll">
+                <input type="text" id="search-input" placeholder="搜索问卷...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <!-- 筛选区域 -->
+        <section class="section">
+            <div class="filter-section animate-on-scroll">
+                <div class="filter-header">
+                    <h2 class="filter-title"><i class="fas fa-filter"></i> 筛选问卷</h2>
+                    <a href="submit-questionnaire.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> 发布问卷
+                    </a>
+                </div>
+                <div class="filter-content">
+                    <div class="filter-item active" data-filter="all">全部</div>
+                    <div class="filter-item" data-filter="study">学习研究</div>
+                    <div class="filter-item" data-filter="social">社会调查</div>
+                    <div class="filter-item" data-filter="market">市场调研</div>
+                    <div class="filter-item" data-filter="other">其他</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 问卷列表 -->
+        <section class="section">
+            <div id="questionnaire-list">
+                <!-- 问卷卡片将通过JavaScript动态生成 -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>正在加载问卷列表...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=website"><i class="fas fa-globe"></i> 网站类</a></li>
+                    <li><a href="resources.html?category=information"><i class="fas fa-newspaper"></i> 信息类</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化动画
+            initAllAnimations();
+            
+            // 加载问卷列表
+            loadQuestionnaires();
+            
+            // 筛选功能
+            const filterItems = document.querySelectorAll('.filter-item');
+            filterItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 更新筛选状态
+                    filterItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 筛选问卷
+                    const filter = this.getAttribute('data-filter');
+                    filterQuestionnaires(filter);
+                });
+            });
+            
+            // 搜索功能
+            document.getElementById('search-btn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('search-input').value.trim();
+                searchQuestionnaires(searchTerm);
+            });
+            
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.trim();
+                    searchQuestionnaires(searchTerm);
+                }
+            });
+        });
+        
+        // 加载问卷列表
+        function loadQuestionnaires() {
+            const questionnaireList = document.getElementById('questionnaire-list');
+            
+            // 从本地存储加载问卷数据
+            const questionnaires = JSON.parse(localStorage.getItem('questionnaires') || '[]');
+            
+            // 渲染问卷列表
+            if (questionnaires.length === 0) {
+                questionnaireList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>暂无问卷</h3>
+                        <p>还没有发布的问卷，快来发布第一个问卷吧！</p>
+                        <a href="submit-questionnaire.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> 发布问卷
+                        </a>
+                    </div>
+                `;
+            } else {
+                questionnaireList.innerHTML = questionnaires.map(questionnaire => `
+                    <div class="questionnaire-card animate-on-scroll">
+                        <div class="questionnaire-header">
+                            <div>
+                                <h3 class="questionnaire-title">${questionnaire.title}</h3>
+                                <div class="questionnaire-meta">
+                                    <span><i class="fas fa-user"></i> ${questionnaire.publisher}</span>
+                                    <span><i class="fas fa-calendar"></i> ${questionnaire.createdAt}</span>
+                                </div>
+                            </div>
+                            <div class="questionnaire-reward">
+                                ${questionnaire.reward}
+                            </div>
+                        </div>
+                        <p class="questionnaire-description">${questionnaire.description}</p>
+                        <div class="questionnaire-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>${questionnaire.participants}/${questionnaire.total} 人参与</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span>截止日期: ${questionnaire.deadline}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-tag"></i>
+                                <span>${getCategoryName(questionnaire.category)}</span>
+                            </div>
+                        </div>
+                        <div class="questionnaire-actions">
+                            <a href="${questionnaire.url}" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-play"></i> 参与问卷
+                            </a>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> 分享
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // 获取分类名称
+        function getCategoryName(category) {
+            const categoryMap = {
+                'study': '学习研究',
+                'social': '社会调查',
+                'market': '市场调研',
+                'other': '其他'
+            };
+            return categoryMap[category] || '其他';
+        }
+        
+        // 筛选问卷
+        function filterQuestionnaires(filter) {
+            // 这里可以实现筛选逻辑
+            console.log('筛选问卷:', filter);
+            // 暂时重新加载所有问卷
+            loadQuestionnaires();
+        }
+        
+        // 搜索问卷
+        function searchQuestionnaires(searchTerm) {
+            // 这里可以实现搜索逻辑
+            console.log('搜索问卷:', searchTerm);
+            // 暂时重新加载所有问卷
+            loadQuestionnaires();
+        }
+    </script>
+</body>
+</html>

@@ -19,9 +19,6 @@ export const FilterSystem = {
         
         console.log('初始化筛选系统...');
         
-        // 更新分类计数
-        this.updateCategoryCounts();
-        
         // 绑定侧边栏分类筛选
         document.querySelectorAll('.filter-item[data-category]').forEach(item => {
             item.addEventListener('click', (e) => {
@@ -100,8 +97,36 @@ export const FilterSystem = {
         // 从URL参数读取筛选条件
         this.readFiltersFromURL();
         
-        // 初始筛选
-        this.applyFilters();
+        // 检查资源是否已加载
+        if (ResourceManager.getResources().length > 0) {
+            // 资源已加载，直接应用筛选
+            this.updateCategoryCounts();
+            this.applyFilters();
+        } else {
+            // 资源未加载，等待资源加载完成后再应用筛选
+            console.log('资源未加载，等待资源加载完成...');
+            // 监听资源加载完成事件
+            const checkResourcesLoaded = setInterval(() => {
+                if (ResourceManager.getResources().length > 0) {
+                    clearInterval(checkResourcesLoaded);
+                    console.log('资源加载完成，开始应用筛选...');
+                    this.updateCategoryCounts();
+                    this.applyFilters();
+                }
+            }, 100);
+            
+            // 5秒后如果资源仍未加载，使用备用数据
+            setTimeout(() => {
+                clearInterval(checkResourcesLoaded);
+                if (ResourceManager.getResources().length === 0) {
+                    console.log('资源加载超时，使用备用数据...');
+                    // 手动加载备用数据
+                    ResourceManager.resources = ResourceManager.getFallbackResources();
+                    this.updateCategoryCounts();
+                    this.applyFilters();
+                }
+            }, 5000);
+        }
     },
     
     applyFilters() {
@@ -248,30 +273,38 @@ export const FilterSystem = {
     },
     
     updateCategoryCounts() {
+        const resources = ResourceManager.getResources();
+        console.log('更新分类计数，资源数量:', resources.length);
+        
         const categories = {
             'website': 0,
             'information': 0
         };
         
         // 统计每个分类的资源数量
-        ResourceManager.getResources().forEach(resource => {
+        resources.forEach(resource => {
             if (categories.hasOwnProperty(resource.category)) {
                 categories[resource.category]++;
             }
         });
+        
+        console.log('分类计数:', categories);
         
         // 更新计数显示
         for (const [category, count] of Object.entries(categories)) {
             const countElement = document.getElementById(`count-${category}`);
             if (countElement) {
                 countElement.textContent = count;
+                console.log(`更新分类 ${category} 计数为 ${count}`);
             }
         }
         
         // 更新总体统计
-        const totalCount = ResourceManager.getResources().length;
-        const freeCount = ResourceManager.getResources().filter(r => r.free).length;
-        const premiumCount = ResourceManager.getResources().filter(r => r.rating >= 4).length;
+        const totalCount = resources.length;
+        const freeCount = resources.filter(r => r.free).length;
+        const premiumCount = resources.filter(r => r.rating >= 4).length;
+        
+        console.log('总体统计:', { totalCount, freeCount, premiumCount });
         
         const totalCountElement = document.getElementById('total-count');
         const freeCountElement = document.getElementById('free-count');

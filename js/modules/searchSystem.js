@@ -69,17 +69,8 @@ export const SearchSystem = {
             this.updateHotSearches(searchTerm);
         }
         
-        if (window.FilterSystem) {
-            window.FilterSystem.currentFilters.searchTerm = searchTerm;
-            
-            // 如果在资源页面，直接应用筛选
-            if (DOMUtil.$('#all-resources')) {
-                window.FilterSystem.applyFilters();
-            } else {
-                // 如果不在资源页面，跳转到资源页面并传递搜索参数
-                window.location.href = `resources.html?search=${encodeURIComponent(searchTerm)}`;
-            }
-        }
+        // 直接跳转到资源页面并传递搜索参数
+        window.location.href = `resources.html?search=${encodeURIComponent(searchTerm)}`;
         
         // 隐藏搜索建议
         this.hideSearchSuggestions();

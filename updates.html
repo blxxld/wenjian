@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新日志 - 问茧</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-book-open"></i> 问茧
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-layer-group"></i> 资源</a></li>
+                <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                <li><a href="updates.html" class="active"><i class="fas fa-history"></i> 更新日志</a></li>
+            </ul>
+            <div class="user-dropdown">
+                <a href="#" class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>用户中心</span>
+                    <span class="user-points">100</span>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="recharge.html" class="dropdown-item">
+                        <i class="fas fa-receipt"></i> 充值中心
+                    </a>
+                    <a href="subscription.html" class="dropdown-item">
+                        <i class="fas fa-bell"></i> 订阅设置
+                    </a>
+                    <a href="submit-resource.html" class="dropdown-item">
+                        <i class="fas fa-upload"></i> 提交资源
+                    </a>
+                    <a href="pending-resources.html" class="dropdown-item">
+                        <i class="fas fa-clock"></i> 待审核资源
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                    </a>
+                </div>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <h1 class="page-title">更新日志</h1>
+        <p class="page-subtitle">了解平台的最新动态和功能更新</p>
+    </div>
+
+    <!-- 更新日志区域 -->
+    <section class="update-logs-section">
+        <div class="container">
+            <div class="update-logs-header">
+                <h2>平台更新历史</h2>
+                <p>我们不断优化和完善平台功能，为大学生提供更好的资源服务体验</p>
+            </div>
+            
+            <!-- 日志筛选 -->
+            <div class="log-filters">
+                <button class="log-filter-btn active" data-filter="all">全部</button>
+                <button class="log-filter-btn" data-filter="major">重大更新</button>
+                <button class="log-filter-btn" data-filter="resource">资源更新</button>
+                <button class="log-filter-btn" data-filter="optimization">体验优化</button>
+                <button class="log-filter-btn" data-filter="initial">平台初始化</button>
+            </div>
+            
+            <!-- 日志容器 -->
+            <div id="update-logs-container">
+                <!-- 日志内容将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-book-open"></i> 问茧</h3>
+                <p>问茧是一个专为大学生打造的资源整合平台，致力于为大学生提供优质的学习、竞赛、实习等资源，帮助大学生更好地成长和发展。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-chevron-right"></i> 资源中心</a></li>
+                    <li><a href="questionnaire.html"><i class="fas fa-chevron-right"></i> 问卷社区</a></li>
+                    <li><a href="about.html"><i class="fas fa-chevron-right"></i> 关于我们</a></li>
+                    <li><a href="updates.html"><i class="fas fa-chevron-right"></i> 更新日志</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-envelope"></i> contact@wenjian.com</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> 400-123-4567</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> 北京市海淀区中关村大街1号</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>服务支持</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> 帮助中心</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> 使用指南</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> 隐私政策</a></li>
+                    <li><a href="#"><i class="fas fa-file-contract"></i> 用户协议</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

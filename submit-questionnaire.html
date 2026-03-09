@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布问卷 - 问茧</title>
+    <meta name="description" content="在问茧问卷社区发布问卷，获取更多参与者和数据">
+    <meta name="keywords" content="发布问卷,问卷提交,数据收集,大学生问卷">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" async>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(58, 134, 255, 0.1);
+            backdrop-filter: blur(10px);
+            background: linear-gradient(10deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 100%);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .form-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: flex-end;
+            margin-top: 3rem;
+        }
+        
+        .success-message {
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .error-message {
+            color: var(--warning-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .form-input.error,
+        .form-textarea.error,
+        .form-select.error {
+            border-color: var(--warning-color);
+        }
+        
+        .reward-info {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+        
+        .reward-info h4 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .reward-info p {
+            margin-bottom: 0.5rem;
+            color: var(--gray-color);
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-rocket"></i>
+                <span>问茧</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于</a></li>
+                <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                <li id="user-menu">
+                    <a href="auth.html"><i class="fas fa-user"></i> 登录/注册</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">发布问卷</h1>
+            <p class="page-subtitle">发布你的问卷，获取更多参与者和数据</p>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <section class="section">
+            <div class="form-container animate-on-scroll">
+                <!-- 成功消息 -->
+                <div class="success-message" id="successMessage">
+                    <h3><i class="fas fa-check-circle"></i> 发布成功！</h3>
+                    <p>你的问卷已成功发布，我们会尽快审核并上线。</p>
+                </div>
+
+                <!-- 提交表单 -->
+                <form id="questionnaireForm" onsubmit="return handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="questionnaireTitle" class="form-label">问卷标题 *</label>
+                        <input type="text" id="questionnaireTitle" class="form-input" placeholder="请输入问卷标题" required>
+                        <div class="error-message" id="questionnaireTitleError">请输入问卷标题</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireDescription" class="form-label">问卷描述 *</label>
+                        <textarea id="questionnaireDescription" class="form-textarea" placeholder="请详细描述问卷的目的和内容" required></textarea>
+                        <div class="error-message" id="questionnaireDescriptionError">请输入问卷描述</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireUrl" class="form-label">问卷链接 *</label>
+                        <input type="url" id="questionnaireUrl" class="form-input" placeholder="请输入问卷链接（http:// 或 https://）" required>
+                        <div class="error-message" id="questionnaireUrlError">请输入有效的问卷链接</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireCategory" class="form-label">问卷分类 *</label>
+                        <select id="questionnaireCategory" class="form-select" required>
+                            <option value="">请选择分类</option>
+                            <option value="study">学习研究</option>
+                            <option value="social">社会调查</option>
+                            <option value="market">市场调研</option>
+                            <option value="other">其他</option>
+                        </select>
+                        <div class="error-message" id="questionnaireCategoryError">请选择问卷分类</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireTotal" class="form-label">目标参与人数 *</label>
+                        <input type="number" id="questionnaireTotal" class="form-input" placeholder="请输入目标参与人数" required min="1">
+                        <div class="error-message" id="questionnaireTotalError">请输入有效的目标参与人数</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireReward" class="form-label">参与奖励（积分）*</label>
+                        <input type="number" id="questionnaireReward" class="form-input" placeholder="请输入参与奖励积分" required min="1">
+                        <div class="error-message" id="questionnaireRewardError">请输入有效的奖励积分</div>
+                        <div class="reward-info">
+                            <h4><i class="fas fa-info-circle"></i> 奖励说明</h4>
+                            <p>1. 参与奖励将从你的账户积分中扣除</p>
+                            <p>2. 参与者完成问卷后将获得相应积分</p>
+                            <p>3. 建议根据问卷长度和复杂度设置合理的奖励</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questionnaireDeadline" class="form-label">截止日期 *</label>
+                        <input type="date" id="questionnaireDeadline" class="form-input" required>
+                        <div class="error-message" id="questionnaireDeadlineError">请选择截止日期</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="publisherName" class="form-label">发布者名称 *</label>
+                        <input type="text" id="publisherName" class="form-input" placeholder="请输入发布者名称" required>
+                        <div class="error-message" id="publisherNameError">请输入发布者名称</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="publisherEmail" class="form-label">联系邮箱 *</label>
+                        <input type="email" id="publisherEmail" class="form-input" placeholder="请输入联系邮箱" required>
+                        <div class="error-message" id="publisherEmailError">请输入有效的联系邮箱</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="questionnaire.html" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> 返回问卷社区
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-share-alt"></i> 发布问卷
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-rocket"></i> 问茧</h3>
+                <p>致力于打破大学生信息差，让每个人都能高效获取优质资源。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
+                    <li><a href="questionnaire.html"><i class="fas fa-clipboard-list"></i> 问卷社区</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="submit.html"><i class="fas fa-share-alt"></i> 提交资源</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>资源分类</h4>
+                <ul>
+                    <li><a href="resources.html?category=website"><i class="fas fa-globe"></i> 网站类</a></li>
+                    <li><a href="resources.html?category=information"><i class="fas fa-newspaper"></i> 信息类</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <p><i class="fas fa-envelope"></i> w2844191926@qq.com</p>
+                <p><i class="fas fa-user-graduate"></i> 大学生创业项目</p>
+                <p>欢迎提出宝贵建议！</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 问茧. 保留所有权利. Designed with ❤️ for students.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initAllAnimations();
+        });
+        
+        // 表单验证和提交处理
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // 重置错误消息
+            resetErrors();
+            
+            // 验证表单
+            if (!validateForm()) {
+                return false;
+            }
+            
+            // 获取表单数据
+            const formData = {
+                title: document.getElementById('questionnaireTitle').value,
+                description: document.getElementById('questionnaireDescription').value,
+                url: document.getElementById('questionnaireUrl').value,
+                category: document.getElementById('questionnaireCategory').value,
+                total: parseInt(document.getElementById('questionnaireTotal').value),
+                reward: parseInt(document.getElementById('questionnaireReward').value),
+                deadline: document.getElementById('questionnaireDeadline').value,
+                publisher: document.getElementById('publisherName').value,
+                email: document.getElementById('publisherEmail').value
+            };
+            
+            // 创建新问卷对象
+            const newQuestionnaire = {
+                id: Date.now(),
+                title: formData.title,
+                description: formData.description,
+                url: formData.url,
+                category: formData.category,
+                reward: `${formData.reward}积分`,
+                participants: 0,
+                total: formData.total,
+                deadline: formData.deadline,
+                publisher: formData.publisher,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            // 保存到本地存储
+            const questionnaires = JSON.parse(localStorage.getItem('questionnaires') || '[]');
+            questionnaires.push(newQuestionnaire);
+            localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
+            console.log('问卷已发布:', newQuestionnaire);
+            
+            // 显示成功消息
+            document.getElementById('successMessage').classList.add('show');
+            
+            // 重置表单
+            document.getElementById('questionnaireForm').reset();
+            
+            // 3秒后隐藏成功消息并跳转到问卷社区
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+                window.location.href = 'questionnaire.html';
+            }, 3000);
+            
+            return false;
+        }
+        
+        // 表单验证
+        function validateForm() {
+            let isValid = true;
+            
+            // 验证问卷标题
+            const title = document.getElementById('questionnaireTitle');
+            if (!title.value.trim()) {
+                showError(title, 'questionnaireTitleError', '请输入问卷标题');
+                isValid = false;
+            }
+            
+            // 验证问卷描述
+            const description = document.getElementById('questionnaireDescription');
+            if (!description.value.trim()) {
+                showError(description, 'questionnaireDescriptionError', '请输入问卷描述');
+                isValid = false;
+            }
+            
+            // 验证问卷链接
+            const url = document.getElementById('questionnaireUrl');
+            if (!url.value.trim()) {
+                showError(url, 'questionnaireUrlError', '请输入问卷链接');
+                isValid = false;
+            } else if (!isValidUrl(url.value)) {
+                showError(url, 'questionnaireUrlError', '请输入有效的问卷链接');
+                isValid = false;
+            }
+            
+            // 验证问卷分类
+            const category = document.getElementById('questionnaireCategory');
+            if (!category.value) {
+                showError(category, 'questionnaireCategoryError', '请选择问卷分类');
+                isValid = false;
+            }
+            
+            // 验证目标参与人数
+            const total = document.getElementById('questionnaireTotal');
+            if (!total.value || parseInt(total.value) < 1) {
+                showError(total, 'questionnaireTotalError', '请输入有效的目标参与人数');
+                isValid = false;
+            }
+            
+            // 验证参与奖励
+            const reward = document.getElementById('questionnaireReward');
+            if (!reward.value || parseInt(reward.value) < 1) {
+                showError(reward, 'questionnaireRewardError', '请输入有效的奖励积分');
+                isValid = false;
+            }
+            
+            // 验证截止日期
+            const deadline = document.getElementById('questionnaireDeadline');
+            if (!deadline.value) {
+                showError(deadline, 'questionnaireDeadlineError', '请选择截止日期');
+                isValid = false;
+            } else if (new Date(deadline.value) < new Date()) {
+                showError(deadline, 'questionnaireDeadlineError', '截止日期不能早于今天');
+                isValid = false;
+            }
+            
+            // 验证发布者名称
+            const publisherName = document.getElementById('publisherName');
+            if (!publisherName.value.trim()) {
+                showError(publisherName, 'publisherNameError', '请输入发布者名称');
+                isValid = false;
+            }
+            
+            // 验证联系邮箱
+            const publisherEmail = document.getElementById('publisherEmail');
+            if (!publisherEmail.value.trim()) {
+                showError(publisherEmail, 'publisherEmailError', '请输入联系邮箱');
+                isValid = false;
+            } else if (!isValidEmail(publisherEmail.value)) {
+                showError(publisherEmail, 'publisherEmailError', '请输入有效的联系邮箱');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // 显示错误消息
+        function showError(element, errorId, message) {
+            element.classList.add('error');
+            const errorElement = document.getElementById(errorId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+        
+        // 重置错误消息
+        function resetErrors() {
+            const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+            inputs.forEach(input => {
+                input.classList.remove('error');
+            });
+            
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(message => {
+                message.classList.remove('show');
+            });
+        }
+        
+        // 验证URL
+        function isValidUrl(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+        
+        // 验证邮箱
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    </script>
+</body>
+</html>

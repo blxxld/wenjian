@@ -4,8 +4,6 @@
 const SYSTEM_PROMPT = '你是问茧的AI助手，一个基于DeepSeek大模型开发的独立智能助手，专注于帮助大学生解决学习、生活和职业发展问题。作为独立的AI模型，你具有以下能力：\n1. 理解复杂的学习和生活问题\n2. 提供个性化的学习建议和规划\n3. 解答专业领域的学术问题\n4. 帮助用户更好地使用问茧网站的各项功能\n5. 提供实时的信息和建议\n\n你的回答应该专业、详细、有针对性，并且要考虑到不同学习阶段（本科、研究生、博士）的学生需求。你不需要依赖任何预定义的回答模板，而是应该根据上下文和专业知识为用户提供原创的、有深度的回答。';
 
 // 全局变量
-let recognition = null;
-let isRecording = false;
 let chatHistory = [
     {
         role: 'system',
@@ -33,11 +31,7 @@ export function initAIAssistant() {
         chatForm.addEventListener('submit', handleChatSubmit);
     }
     
-    // 绑定语音输入按钮事件
-    const voiceInputBtn = document.querySelector('.voice-input-btn');
-    if (voiceInputBtn) {
-        voiceInputBtn.addEventListener('click', toggleVoiceInput);
-    }
+    
     
     // 绑定快速提问按钮事件
     const quickQuestionBtns = document.querySelectorAll('.quick-question-btn');
@@ -712,12 +706,13 @@ function generateEnhancedResponse(question, context = '') {
     return formatResponse(generalResponse + '\n\n如果你需要更详细的信息或有其他问题，请随时告诉我。');
 }
 
-x// 处理聊天提交
+// 处理聊天提交
 export function handleChatSubmit(event) {
     console.log('handleChatSubmit被调用');
-    // 处理事件对象
+    // 处理事件对象，防止页面刷新
     if (event) {
         event.preventDefault();
+        event.stopPropagation();
     }
     
     // 检查DOM元素是否存在
@@ -902,80 +897,7 @@ export function askQuickQuestion(question) {
     }
 }
 
-// 语音输入功能
-export function toggleVoiceInput() {
-    const voiceBtn = document.querySelector('.voice-input-btn');
-    const inputElement = document.getElementById('chat-input');
-    
-    if (!voiceBtn) {
-        console.error('语音输入按钮未找到');
-        return;
-    }
-    
-    if (!inputElement) {
-        console.error('输入框未找到');
-        return;
-    }
-    
-    if (!recognition) {
-        // 检查浏览器是否支持语音识别
-        if ('webkitSpeechRecognition' in window) {
-            try {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                recognition.lang = 'zh-CN';
-                
-                recognition.onstart = function() {
-                    isRecording = true;
-                    voiceBtn.classList.add('recording');
-                };
-                
-                recognition.onresult = function(event) {
-                    try {
-                        if (event.results && event.results.length > 0 && event.results[0].length > 0) {
-                            const transcript = event.results[0][0].transcript;
-                            inputElement.value = transcript;
-                        }
-                    } catch (error) {
-                        console.error('处理语音识别结果时出错:', error);
-                    }
-                };
-                
-                recognition.onerror = function(event) {
-                    console.error('语音识别错误:', event.error);
-                    voiceBtn.classList.remove('recording');
-                    isRecording = false;
-                };
-                
-                recognition.onend = function() {
-                    voiceBtn.classList.remove('recording');
-                    isRecording = false;
-                };
-            } catch (error) {
-                console.error('初始化语音识别时出错:', error);
-                alert('初始化语音识别失败，请重试');
-                return;
-            }
-        } else {
-            alert('您的浏览器不支持语音识别功能');
-            return;
-        }
-    }
-    
-    try {
-        if (isRecording) {
-            recognition.stop();
-        } else {
-            recognition.start();
-        }
-    } catch (error) {
-        console.error('启动/停止语音识别时出错:', error);
-        voiceBtn.classList.remove('recording');
-        isRecording = false;
-        alert('语音识别操作失败，请重试');
-    }
-}
+
 
 // 生成AI响应
 export async function generateAIResponse(message) {

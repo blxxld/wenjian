@@ -525,12 +525,9 @@
 
                 <!-- 输入区域 -->
                 <div class="ai-chat-input">
-                    <form class="ai-chat-form" onsubmit="handleChatSubmit(event); return false;">
+                    <form class="ai-chat-form" onsubmit="handleChatSubmit(event);">
                         <div class="ai-chat-input-container">
                             <input type="text" id="chat-input" placeholder="请输入你的问题..." required>
-                            <button type="button" class="voice-input-btn" onclick="toggleVoiceInput()">
-                                <i class="fas fa-microphone"></i>
-                            </button>
                         </div>
                         <button type="submit" id="send-btn">
                             <i class="fas fa-paper-plane"></i>
@@ -674,14 +671,13 @@
         console.log('模块脚本开始运行');
         
         // 导入AI助手模块
-        import { initAIAssistant, clearChat, askQuickQuestion, toggleVoiceInput, handleChatSubmit, generateAIResponse, testAIAssistant } from './js/ai-assistant.js';
+        import { initAIAssistant, clearChat, askQuickQuestion, handleChatSubmit, generateAIResponse, testAIAssistant } from './js/ai-assistant.js';
         
         console.log('模块导入成功');
         
         // 暴露全局函数供HTML调用
         window.clearChat = clearChat;
         window.askQuickQuestion = askQuickQuestion;
-        window.toggleVoiceInput = toggleVoiceInput;
         window.handleChatSubmit = handleChatSubmit;
         window.generateAIResponse = generateAIResponse;
         window.testAIAssistant = testAIAssistant;

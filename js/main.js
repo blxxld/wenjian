@@ -7,6 +7,12 @@ import { ResourceDisplay } from './modules/resourceDisplay.js';
 import { FilterSystem } from './modules/filterSystem.js';
 import { AnimationManager } from './modules/animationManager.js';
 import { SearchSystem } from './modules/searchSystem.js';
+import { FeedbackSystem } from './modules/feedbackSystem.js';
+import { RecommendationSystem } from './modules/recommendationSystem.js';
+import { NotificationSystem } from './modules/notificationSystem.js';
+import { CommunitySystem } from './modules/communitySystem.js';
+import { UpdateLogSystem } from './modules/updateLogSystem.js';
+import { GuideSystem } from './modules/guideSystem.js';
 
 // 统计功能模块
 const StatsManager = {
@@ -255,6 +261,7 @@ const UserManager = {
                         </a>
                         <div class="dropdown-menu">
                             <a href="#" class="dropdown-item"><i class="fas fa-user"></i> 个人中心</a>
+                            <a href="recharge.html" class="dropdown-item"><i class="fas fa-money-bill-wave"></i> 充值中心</a>
                             <a href="ranking.html" class="dropdown-item"><i class="fas fa-trophy"></i> 积分排行榜</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-heart"></i> 我的收藏</a>
                             <a href="ai-assistant.html" class="dropdown-item"><i class="fas fa-robot"></i> AI助手</a>
@@ -407,6 +414,54 @@ async function initPage() {
             console.log('搜索功能初始化完成');
         } catch (error) {
             console.error('搜索功能初始化失败:', error);
+        }
+        
+        // 反馈系统初始化
+        try {
+            FeedbackSystem.init();
+            console.log('反馈系统初始化完成');
+        } catch (error) {
+            console.error('反馈系统初始化失败:', error);
+        }
+        
+        // 推荐系统初始化
+        try {
+            RecommendationSystem.init();
+            console.log('推荐系统初始化完成');
+        } catch (error) {
+            console.error('推荐系统初始化失败:', error);
+        }
+        
+        // 通知系统初始化
+        try {
+            NotificationSystem.init();
+            console.log('通知系统初始化完成');
+        } catch (error) {
+            console.error('通知系统初始化失败:', error);
+        }
+        
+        // 社区共建系统初始化
+        try {
+            CommunitySystem.init();
+            console.log('社区共建系统初始化完成');
+        } catch (error) {
+            console.error('社区共建系统初始化失败:', error);
+        }
+        
+        // 更新日志系统初始化
+        try {
+            UpdateLogSystem.init();
+            console.log('更新日志系统初始化完成');
+        } catch (error) {
+            console.error('更新日志系统初始化失败:', error);
+        }
+        
+        // 引导系统初始化
+        try {
+            GuideSystem.init();
+            console.log('引导系统初始化完成');
+        } catch (error) {
+            console.error('引导系统初始化失败:', error);
         }
         
         // 键盘快捷键支持

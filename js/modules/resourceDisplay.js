@@ -105,6 +105,9 @@ export const ResourceDisplay = {
                             <button class="favorite-btn ${favoriteClass}" data-resource-id="${resource.id}">
                                 <i class="${favoriteIcon}"></i>
                             </button>
+                            <button class="feedback-btn" data-resource-id="${resource.id}" title="反馈问题">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </button>
                         </div>
                         <h3 class="resource-title">${resource.title}</h3>
                         <p class="resource-description">${resource.description}</p>
@@ -154,6 +157,9 @@ export const ResourceDisplay = {
                             ${freeBadge}
                             <button class="favorite-btn ${favoriteClass}" data-resource-id="${resource.id}">
                                 <i class="${favoriteIcon}"></i>
+                            </button>
+                            <button class="feedback-btn" data-resource-id="${resource.id}" title="反馈问题">
+                                <i class="fas fa-exclamation-circle"></i>
                             </button>
                         </div>
                         <h3 class="resource-title">${resource.title}</h3>
