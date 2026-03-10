@@ -303,8 +303,17 @@ const UserManager = {
                     });
                 }
                 
+                // 绑定积分排行榜按钮事件
+                const rankingLink = userMenu.querySelector('.dropdown-item:nth-child(3)');
+                if (rankingLink) {
+                    DOMUtil.on(rankingLink, 'click', (e) => {
+                        e.preventDefault();
+                        window.location.href = 'ranking.html';
+                    });
+                }
+                
                 // 绑定我的收藏按钮事件
-                const favoritesLink = userMenu.querySelector('.dropdown-item:nth-child(3)');
+                const favoritesLink = userMenu.querySelector('.dropdown-item:nth-child(4)');
                 if (favoritesLink) {
                     DOMUtil.on(favoritesLink, 'click', (e) => {
                         e.preventDefault();
@@ -369,6 +378,75 @@ const UserManager = {
     }
 };
 
+// 折叠分类功能
+function initCollapsibleCategories() {
+    try {
+        const collapseHeaders = document.querySelectorAll('.collapse-header');
+        collapseHeaders.forEach(header => {
+            DOMUtil.on(header, 'click', function() {
+                const content = this.nextElementSibling;
+                if (content && content.classList.contains('sidebar-content')) {
+                    this.classList.toggle('collapsed');
+                    content.classList.toggle('collapsed');
+                }
+            });
+        });
+        console.log('折叠分类功能初始化完成');
+    } catch (error) {
+        console.error('折叠分类功能初始化失败:', error);
+    }
+}
+
+// 主题切换功能
+function initThemeToggle() {
+    try {
+        // 检查本地存储中的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // 创建主题切换按钮
+        const themeToggle = document.createElement('button');
+        themeToggle.className = 'theme-toggle';
+        themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        themeToggle.title = '切换主题';
+        
+        // 绑定点击事件
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        
+        // 将按钮添加到导航栏
+        const navContainer = document.querySelector('.nav-container');
+        if (navContainer) {
+            navContainer.appendChild(themeToggle);
+        }
+        
+        console.log('主题切换功能初始化完成');
+    } catch (error) {
+        console.error('主题切换功能初始化失败:', error);
+    }
+}
+
+// 设置最后更新时间
+function setLastUpdateTime() {
+    try {
+        const lastUpdateElement = document.getElementById('last-update');
+        if (lastUpdateElement) {
+            const now = new Date();
+            const formattedDate = now.toISOString().split('T')[0];
+            lastUpdateElement.textContent = formattedDate;
+        }
+        console.log('最后更新时间设置完成');
+    } catch (error) {
+        console.error('设置最后更新时间失败:', error);
+    }
+}
+
 // 页面初始化
 async function initPage() {
     console.log('开始初始化页面...');
@@ -398,6 +476,30 @@ async function initPage() {
             }
         } catch (error) {
             console.error('移动端菜单初始化失败:', error);
+        }
+        
+        // 折叠分类功能
+        try {
+            initCollapsibleCategories();
+            console.log('折叠分类功能初始化完成');
+        } catch (error) {
+            console.error('折叠分类功能初始化失败:', error);
+        }
+        
+        // 主题切换功能
+        try {
+            initThemeToggle();
+            console.log('主题切换功能初始化完成');
+        } catch (error) {
+            console.error('主题切换功能初始化失败:', error);
+        }
+        
+        // 设置最后更新时间
+        try {
+            setLastUpdateTime();
+            console.log('最后更新时间设置完成');
+        } catch (error) {
+            console.error('设置最后更新时间失败:', error);
         }
         
         // 更新用户菜单

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手测试</title>
+</head>
+<body>
+    <h1>AI助手测试</h1>
+    <div id="chat-body"></div>
+    <input type="text" id="chat-input" placeholder="请输入你的问题...">
+    <button onclick="sendMessage()">发送</button>
+    <script>
+        // 初始化聊天界面
+        document.getElementById('chat-body').textContent = 'AI: 你好！我是AI助手，有什么可以帮助你的吗？\n';
+        
+        function sendMessage() {
+            var chatBody = document.getElementById('chat-body');
+            var chatInput = document.getElementById('chat-input');
+            var message = chatInput.value.trim();
+            
+            if (message) {
+                // 显示用户消息
+                chatBody.textContent += '你: ' + message + '\n';
+                
+                // 清空输入框
+                chatInput.value = '';
+                
+                // 显示AI响应
+                setTimeout(function() {
+                    chatBody.textContent += 'AI: 这是AI的回复，你刚才说: ' + message + '\n';
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

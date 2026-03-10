@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手 - 问茧</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #4361ee;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .chat-body {
+            height: 400px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+        }
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+        }
+        .chat-input button {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #3a0ca3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI助手</h1>
+        <div class="chat-container">
+            <div class="chat-header">
+                智能助手
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="message ai-message">你好！我是AI助手，有什么可以帮助你的吗？</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="请输入你的问题...">
+                <button id="send-btn">发送</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 页面加载完成后绑定事件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定发送按钮点击事件
+            document.getElementById('send-btn').addEventListener('click', function() {
+                sendMessage();
+            });
+            
+            // 绑定回车键事件
+            document.getElementById('chat-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+        
+        // 发送消息函数
+        function sendMessage() {
+            var chatBody = document.getElementById('chat-body');
+            var chatInput = document.getElementById('chat-input');
+            var message = chatInput.value.trim();
+            
+            if (message) {
+                // 显示用户消息
+                var userDiv = document.createElement('div');
+                userDiv.className = 'message user-message';
+                userDiv.textContent = message;
+                chatBody.appendChild(userDiv);
+                
+                // 清空输入框
+                chatInput.value = '';
+                
+                // 滚动到底部
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                // 显示AI响应
+                setTimeout(function() {
+                    var aiDiv = document.createElement('div');
+                    aiDiv.className = 'message ai-message';
+                    aiDiv.textContent = '这是AI的回复，你刚才说: ' + message;
+                    chatBody.appendChild(aiDiv);
+                    
+                    // 滚动到底部
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>基本测试</title>
+</head>
+<body>
+    <h1>基本测试</h1>
+    <div id="output"></div>
+    <input type="text" id="input">
+    <button onclick="addText()">添加文本</button>
+    
+    <script>
+        function addText() {
+            var input = document.getElementById('input');
+            var output = document.getElementById('output');
+            var text = input.value;
+            output.innerHTML += '<p>' + text + '</p>';
+            input.value = '';
+        }
+    </script>
+</body>
+</html>

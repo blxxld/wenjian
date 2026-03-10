@@ -306,50 +306,53 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 检查是否登录
-            if (!UserManager.isLoggedIn()) {
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            // 更新用户菜单
-            UserManager.updateUserMenu();
-            
-            // 加载用户信息
-            loadUserInfo();
-            
-            // 加载收藏内容
-            loadFavorites();
-            
-            // 绑定标签切换事件
-            const tabs = document.querySelectorAll('.profile-tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
+            // 延迟检查登录状态，确保UserManager已经初始化
+            setTimeout(function() {
+                // 检查是否登录
+                if (!UserManager.isLoggedIn()) {
+                    window.location.href = 'auth.html';
+                    return;
+                }
+                
+                // 更新用户菜单
+                UserManager.updateUserMenu();
+                
+                // 加载用户信息
+                loadUserInfo();
+                
+                // 加载收藏内容
+                loadFavorites();
+                
+                // 绑定标签切换事件
+                const tabs = document.querySelectorAll('.profile-tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // 移除所有活动状态
+                        tabs.forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        // 添加活动状态
+                        this.classList.add('active');
+                        const tabId = this.getAttribute('data-tab') + '-tab';
+                        document.getElementById(tabId).classList.add('active');
+                    });
+                });
+                
+                // 检查URL是否包含#favorites，如果是则切换到收藏标签
+                if (window.location.hash === '#favorites') {
                     // 移除所有活动状态
                     tabs.forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
                     
-                    // 添加活动状态
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-            
-            // 检查URL是否包含#favorites，如果是则切换到收藏标签
-            if (window.location.hash === '#favorites') {
-                // 移除所有活动状态
-                tabs.forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
-                
-                // 激活收藏标签
-                const favoritesTab = document.querySelector('.profile-tab[data-tab="favorites"]');
-                const favoritesContent = document.getElementById('favorites-tab');
-                if (favoritesTab && favoritesContent) {
-                    favoritesTab.classList.add('active');
-                    favoritesContent.classList.add('active');
+                    // 激活收藏标签
+                    const favoritesTab = document.querySelector('.profile-tab[data-tab="favorites"]');
+                    const favoritesContent = document.getElementById('favorites-tab');
+                    if (favoritesTab && favoritesContent) {
+                        favoritesTab.classList.add('active');
+                        favoritesContent.classList.add('active');
+                    }
                 }
-            }
+            }, 100);
         });
         
         // 加载用户信息

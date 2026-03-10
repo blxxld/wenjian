@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Test 2</title>
+</head>
+<body>
+    <h1>Console Test 2</h1>
+    <input type="text" id="test-input" placeholder="输入测试文本">
+    <button onclick="testFunction()">测试按钮</button>
+    <script>
+        function testFunction() {
+            var input = document.getElementById('test-input');
+            var value = input.value;
+            console.log('按钮被点击，输入值为:', value);
+            alert('按钮被点击，输入值为: ' + value);
+        }
+    </script>
+</body>
+</html>

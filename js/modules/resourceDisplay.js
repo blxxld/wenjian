@@ -218,6 +218,26 @@ export const ResourceDisplay = {
                     readMoreBtn.innerHTML = '<i class="fas fa-chevron-down"></i> 查看更多';
                 }
             }
+            
+            // 处理标签点击事件
+            if (e.target.closest('.tag')) {
+                const tagElement = e.target.closest('.tag');
+                const tagText = tagElement.textContent.trim();
+                
+                // 使用搜索功能来实现标签筛选
+                if (window.FilterSystem) {
+                    // 设置搜索词为标签文本
+                    window.FilterSystem.currentFilters.searchTerm = tagText;
+                    // 应用筛选
+                    window.FilterSystem.applyFilters();
+                    
+                    // 更新搜索框的值
+                    const searchInput = document.getElementById('search-input');
+                    if (searchInput) {
+                        searchInput.value = tagText;
+                    }
+                }
+            }
         });
     }
 };

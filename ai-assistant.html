@@ -455,8 +455,14 @@
                 <i class="fas fa-graduation-cap"></i>
                 问茧
             </a>
+            <div class="nav-search">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="搜索资源...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
                 <li><a href="resources.html"><i class="fas fa-book"></i> 资源库</a></li>
                 <li><a href="submit.html"><i class="fas fa-plus"></i> 提交资源</a></li>
                 <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
@@ -497,11 +503,11 @@
                 <div class="quick-questions">
                     <h3>常用问题</h3>
                     <div class="quick-question-buttons">
-                        <button class="quick-question-btn" onclick="askQuickQuestion('推荐一些学习编程的网站')">推荐编程学习网站</button>
-                        <button class="quick-question-btn" onclick="askQuickQuestion('如何制定有效的学习计划')">制定学习计划</button>
-                        <button class="quick-question-btn" onclick="askQuickQuestion('如何准备面试')">面试准备</button>
-                        <button class="quick-question-btn" onclick="askQuickQuestion('推荐一些实用工具')">实用工具推荐</button>
-                        <button class="quick-question-btn" onclick="testAI()">测试AI助手</button>
+                        <button class="quick-question-btn" data-question="推荐一些学习编程的网站">推荐编程学习网站</button>
+                        <button class="quick-question-btn" data-question="如何制定有效的学习计划">制定学习计划</button>
+                        <button class="quick-question-btn" data-question="如何准备面试">面试准备</button>
+                        <button class="quick-question-btn" data-question="推荐一些实用工具">实用工具推荐</button>
+                        <button class="quick-question-btn" data-question="测试AI助手功能">测试AI助手</button>
                     </div>
                 </div>
 
@@ -525,14 +531,16 @@
 
                 <!-- 输入区域 -->
                 <div class="ai-chat-input">
-                    <form class="ai-chat-form" onsubmit="handleChatSubmit(event);">
+                    <form class="ai-chat-form">
                         <div class="ai-chat-input-container">
                             <input type="text" id="chat-input" placeholder="请输入你的问题..." required>
                         </div>
-                        <button type="submit" id="send-btn">
+                        <button type="button" id="send-btn" onclick='alert("按钮被点击"); var chatBody = document.getElementById("chat-body"); var chatInput = document.getElementById("chat-input"); var message = chatInput.value.trim(); if (message) { var userDiv = document.createElement("div"); userDiv.className = "user-message"; userDiv.innerHTML = "<div class=\"user-message-content\">" + message + "</div><div class=\"user-avatar\">你</div>"; chatBody.appendChild(userDiv); chatInput.value = ""; setTimeout(function() { var aiDiv = document.createElement("div"); aiDiv.className = "ai-message"; aiDiv.innerHTML = "<div class=\"ai-avatar\">AI</div><div class=\"ai-message-content\">这是AI的回复，你刚才说: " + message + "</div>"; chatBody.appendChild(aiDiv); }, 1000); }'>
                             <i class="fas fa-paper-plane"></i>
                             发送
                         </button>
+                        <button type="button" onclick="alert('测试按钮点击成功！'); console.log('测试按钮被点击');">测试JavaScript</button>
+                        <button type="button" onclick="var testDiv = document.createElement('div'); testDiv.innerHTML = '测试动态创建元素'; document.body.appendChild(testDiv);">测试DOM操作</button>
                     </form>
                 </div>
             </div>
@@ -663,41 +671,75 @@
             };
         })();
     </script>
-    <script type="module" src="js/main.js"></script>
     <script>
-        console.log('测试脚本运行');
-    </script>
-    <script type="module">
-        console.log('模块脚本开始运行');
-        
-        // 导入AI助手模块
-        import { initAIAssistant, clearChat, askQuickQuestion, handleChatSubmit, generateAIResponse, testAIAssistant } from './js/ai-assistant.js';
-        
-        console.log('模块导入成功');
-        
-        // 暴露全局函数供HTML调用
-        window.clearChat = clearChat;
-        window.askQuickQuestion = askQuickQuestion;
-        window.handleChatSubmit = handleChatSubmit;
-        window.generateAIResponse = generateAIResponse;
-        window.testAIAssistant = testAIAssistant;
-        
-        console.log('全局函数暴露成功');
-        
-        // 页面加载完成后初始化AI助手
+        // 页面加载完成后绑定事件
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM加载完成，初始化AI助手');
-            try {
-                initAIAssistant();
-                console.log('AI助手初始化成功');
-                // 测试AI助手
-                console.log('开始测试AI助手');
-                testAIAssistant();
-            } catch (error) {
-                console.error('AI助手初始化失败:', error);
-                alert('AI助手初始化失败: ' + error.message);
-            }
+            // 绑定发送按钮点击事件
+            document.getElementById('send-btn').addEventListener('click', function() {
+                sendMessage();
+            });
+            
+            // 绑定回车键事件
+            document.getElementById('chat-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
         });
+        
+        // 发送消息函数
+        function sendMessage() {
+            var chatBody = document.getElementById('chat-body');
+            var chatInput = document.getElementById('chat-input');
+            var message = chatInput.value.trim();
+            
+            if (message) {
+                // 显示用户消息
+                var userDiv = document.createElement('div');
+                userDiv.className = 'user-message';
+                userDiv.innerHTML = '<div class="user-message-content">' + message + '</div><div class="user-avatar">你</div>';
+                chatBody.appendChild(userDiv);
+                
+                // 清空输入框
+                chatInput.value = '';
+                
+                // 滚动到底部
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                // 显示AI响应
+                setTimeout(function() {
+                    var aiDiv = document.createElement('div');
+                    aiDiv.className = 'ai-message';
+                    aiDiv.innerHTML = '<div class="ai-avatar">AI</div><div class="ai-message-content">这是AI的回复，你刚才说: ' + message + '</div>';
+                    chatBody.appendChild(aiDiv);
+                    
+                    // 滚动到底部
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+            }
+        }
+        
+        // 清空聊天记录
+        function clearChat() {
+            var chatBody = document.getElementById('chat-body');
+            if (chatBody) {
+                // 保留AI欢迎消息
+                const welcomeMessage = chatBody.querySelector('.ai-message');
+                chatBody.innerHTML = '';
+                if (welcomeMessage) {
+                    chatBody.appendChild(welcomeMessage);
+                }
+            }
+        }
+        
+        // 快速提问功能
+        function askQuickQuestion(question) {
+            var chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                chatInput.value = question;
+                sendMessage();
+            }
+        }
     </script>
 </body>
 </html>

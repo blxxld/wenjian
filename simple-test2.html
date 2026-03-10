@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试</title>
+</head>
+<body>
+    <h1>简单测试</h1>
+    <input type="text" id="input" placeholder="输入文本">
+    <button id="btn">点击</button>
+    <div id="output"></div>
+    <script>
+        console.log('脚本加载成功');
+        
+        document.getElementById('btn').addEventListener('click', function() {
+            console.log('按钮被点击');
+            var input = document.getElementById('input');
+            var output = document.getElementById('output');
+            var value = input.value;
+            console.log('输入值:', value);
+            output.textContent = '你输入了: ' + value;
+        });
+    </script>
+</body>
+</html>

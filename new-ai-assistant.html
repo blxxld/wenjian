@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手 - 问茧</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .chat-box {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #f1f1f1;
+        }
+        .input-area {
+            display: flex;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .input-area button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .input-area button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI助手</h1>
+        <div class="chat-box" id="chat-box">
+            <div class="message ai-message">你好！我是AI助手，有什么可以帮助你的吗？</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="请输入你的问题..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button id="send-button" onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+    <script>
+        // 全局变量
+        var chatBox, messageInput, sendButton;
+        
+        // 页面加载完成后执行
+        window.onload = function() {
+            console.log('页面加载完成，开始初始化');
+            // 获取DOM元素
+            chatBox = document.getElementById('chat-box');
+            messageInput = document.getElementById('message-input');
+            sendButton = document.getElementById('send-button');
+            
+            console.log('DOM元素获取结果:', {
+                chatBox: chatBox,
+                messageInput: messageInput,
+                sendButton: sendButton
+            });
+            
+            console.log('初始化完成');
+        };
+        
+        // 全局发送消息函数
+        function sendMessage() {
+            console.log('发送消息函数被调用');
+            var message = messageInput.value.trim();
+            console.log('输入的消息:', message);
+            if (message) {
+                console.log('消息不为空，开始处理');
+                // 显示用户消息
+                var userMessageDiv = document.createElement('div');
+                userMessageDiv.className = 'message user-message';
+                userMessageDiv.textContent = message;
+                console.log('创建用户消息元素:', userMessageDiv);
+                chatBox.appendChild(userMessageDiv);
+                console.log('用户消息已添加到聊天框');
+                
+                // 清空输入框
+                messageInput.value = '';
+                console.log('输入框已清空');
+                
+                // 滚动到底部
+                chatBox.scrollTop = chatBox.scrollHeight;
+                console.log('滚动到底部');
+                
+                // 显示AI响应
+                setTimeout(function() {
+                    console.log('开始显示AI响应');
+                    var aiMessageDiv = document.createElement('div');
+                    aiMessageDiv.className = 'message ai-message';
+                    aiMessageDiv.textContent = '这是AI的回复，你刚才说: ' + message;
+                    console.log('创建AI消息元素:', aiMessageDiv);
+                    chatBox.appendChild(aiMessageDiv);
+                    console.log('AI消息已添加到聊天框');
+                    
+                    // 滚动到底部
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    console.log('滚动到底部');
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

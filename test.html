@@ -1,26 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测试页面</title>
+    <title>JavaScript Test</title>
 </head>
 <body>
-    <h1>测试页面</h1>
-    <p>如果看到此消息，说明HTML加载正常</p>
-    <div id="test-result"></div>
-    
-    <script type="module">
-        console.log('ES模块加载成功');
-        document.getElementById('test-result').textContent = 'ES模块加载成功';
-        
-        // 测试本地存储
-        try {
-            localStorage.setItem('test', 'test');
-            document.getElementById('test-result').textContent += ' | 本地存储正常';
-        } catch (error) {
-            document.getElementById('test-result').textContent += ' | 本地存储失败: ' + error.message;
-        }
+    <h1>JavaScript Test</h1>
+    <button onclick="alert('Hello, JavaScript!')">Click Me</button>
+    <script>
+        console.log('JavaScript is running');
     </script>
 </body>
 </html>
